@@ -2,6 +2,7 @@ import type { Config } from "tailwindcss"
 
 const { iconsPlugin, getIconCollections } = require("@egoist/tailwindcss-icons")
 
+/** @type {import('tailwindcss').Config} */
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",

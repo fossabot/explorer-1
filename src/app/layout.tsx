@@ -3,6 +3,8 @@ import type { Metadata } from "next"
 import { ColorSchemeScript, MantineProvider } from "@mantine/core"
 import { theme } from "@rss3/mantine-theme"
 
+import Providers from "./providers"
+
 import "./globals.css"
 
 // font
@@ -29,7 +31,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ColorSchemeScript />
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <Providers>
+          <MantineProvider theme={theme}>{children}</MantineProvider>
+        </Providers>
       </body>
     </html>
   )
