@@ -8,6 +8,10 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  presets: [
+    // add rss3 preset
+    require("@rss3/mantine-theme/tailwind/preset"),
+  ],
   theme: {
     extend: {
       backgroundImage: {

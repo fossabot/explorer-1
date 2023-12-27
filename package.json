@@ -13,9 +13,18 @@
     "**/*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
+    "@mantine/core": "7.3.2",
+    "@rss3/js-sdk": "0.6.55",
+    "@rss3/mantine-theme": "0.0.9",
+    "@tanstack/react-query": "5.15.0",
+    "ahooks": "3.7.8",
+    "clsx": "2.0.0",
+    "cmdk": "0.2.0",
+    "moment": "2.29.4",
     "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tailwind-merge": "2.2.0"
   },
   "devDependencies": {
     "@egoist/tailwindcss-icons": "1.7.1",
@@ -29,7 +38,10 @@
     "eslint-config-next": "14.0.4",
     "husky": "8.0.3",
     "lint-staged": "15.2.0",
-    "postcss": "^8",
+    "postcss": "8.4.32",
+    "postcss-import": "15.1.0",
+    "postcss-preset-mantine": "1.12.2",
+    "postcss-simple-vars": "7.0.1",
     "prettier": "3.1.1",
     "prettier-package-json": "2.8.0",
     "tailwindcss": "3.3.0",

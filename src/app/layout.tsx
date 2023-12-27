@@ -1,9 +1,19 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+
+import { ColorSchemeScript, MantineProvider } from "@mantine/core"
+import { theme } from "@rss3/mantine-theme"
 
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+// font
+import { Poppins } from "next/font/google"
+
+const font = Poppins({
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+  subsets: ["latin"],
+  variable: "--font-poppins",
+})
+theme.fontFamily = font.style.fontFamily
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,7 +27,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <ColorSchemeScript />
+        <MantineProvider theme={theme}>{children}</MantineProvider>
+      </body>
     </html>
   )
 }
