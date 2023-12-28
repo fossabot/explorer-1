@@ -24,7 +24,7 @@ const ActivitiesTableRow = ({
   const owner = isSDK ? activity.owner ?? activity.from : activity.from
   return (
     <Table.Tr
-      className="h-20"
+      className="h-20 hover:bg-zinc-100 cursor-pointer transition-colors"
       onClick={() => {
         onRowClick && onRowClick(activity.id)
       }}

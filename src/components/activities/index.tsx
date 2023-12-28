@@ -98,7 +98,11 @@ const Activities = () => {
                   key={`activities-${activity.id}`}
                   activity={activity}
                   onRowClick={(id) => {
-                    router.push(`/id/${id}`)
+                    window.open(
+                      `https://hoot.it/${
+                        activity.owner || activity.from
+                      }/activity/${id}`,
+                    )
                   }}
                 />
               ))}

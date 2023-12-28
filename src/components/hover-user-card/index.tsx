@@ -36,7 +36,11 @@ const HoverUserCard = ({
       }}
     >
       <HoverCard.Target>
-        <Link href={`/address/${account}`}>
+        <Link
+          href={`https://hoot.it/${account}`}
+          target="_blank"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className={cn("flex flex-row items-center gap-x-2", fontClass)}>
             <Avatar
               src={`https://cdn.stamp.fyi/avatar/eth:${account}?s=100`}

@@ -130,7 +130,7 @@ const UserCard = ({
       )}
 
       {withHover && (
-        <Link href={`/address/${validAccount}`}>
+        <Link href={`https://hoot.it/${validAccount}`}>
           <Button variant="outline" size="sm">
             View more
           </Button>

@@ -16,8 +16,9 @@ const SearchBar = () => {
 
     const isAccount = isSupportedNS(value) || isAddress(value)
     if (isAccount) {
-      router.push(`/address/${value}`)
+      window.open(`https://hoot.it/${value}`)
     } else {
+      // TODO
       router.push(`/id/${value}`)
     }
   }
