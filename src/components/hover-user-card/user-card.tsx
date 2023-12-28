@@ -81,24 +81,18 @@ const UserCard = ({
 
   if (isFetching) {
     return (
-      <div className="flex flex-col items-start justify-center gap-y-3">
-        <div className="flex w-full flex-row items-center justify-between">
-          <Skeleton className="h-16 w-16 rounded-full" />
-          {withHover && (
-            <Skeleton className="h-[22px] w-[84px] rounded-[5px]" />
-          )}
+      <div className="flex flex-col items-start justify-center gap-y-3 w-72">
+        <div className="flex w-full flex-row items-center justify-start gap-3">
+          <Skeleton height={57} circle />
+          {withHover && <Skeleton width={110} height={22} />}
         </div>
-        <Skeleton className="h-7 w-20" />
-        <div className="flex w-full flex-col items-start justify-center gap-3">
-          <Skeleton className="h-[50px] w-full max-w-xs" />
-          <Skeleton className="h-[50px] w-full max-w-xs" />
-        </div>
+        <Skeleton className="h-7 w-24" />
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col items-start justify-center gap-y-3">
+    <div className="flex flex-col items-start justify-center gap-y-3 w-72">
       {currentProfile ? (
         <div className="flex w-full flex-row items-center justify-start gap-3">
           <ProfileAvatar
@@ -167,7 +161,8 @@ const UserCard = ({
                 <Avatar
                   src={`https://assets.rss3.io/web3-icons/${profile.platform}.png`}
                   alt={account}
-                  className="absolute bottom-0 right-[-4px] h-4 w-4"
+                  className="absolute bottom-0 right-[-4px]"
+                  size="xs"
                 ></Avatar>
               </div>
               <span>{profile.handle}</span>

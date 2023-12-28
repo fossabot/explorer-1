@@ -1,25 +1,30 @@
 import Link from "next/link"
 
-import { Table, Tooltip } from "@mantine/core"
+import { Popover, Table } from "@mantine/core"
+import { useDisclosure } from "@mantine/hooks"
 
 const ActivitiesTableHeader = () => {
+  const [opened, { close, open }] = useDisclosure(false)
+
   return (
     <>
-      <Table.Thead className="uppercase hover:bg-transparent">
-        <Table.Tr>
+      <Table.Thead>
+        <Table.Tr className="h-16">
           <Table.Th>Activity ID</Table.Th>
-          <Table.Th>
+          <Table.Th onMouseLeave={close}>
             <div className="flex flex-row items-center gap-x-3">
               <span>UMS Tag</span>
-              <Tooltip
-                label={
-                  <div className="flex max-w-xs flex-col items-start gap-y-2 font-normal normal-case text-muted-foreground">
+              <Popover opened={opened}>
+                <Popover.Target>
+                  <i onMouseEnter={open} className="i-mingcute-question-line" />
+                </Popover.Target>
+                <Popover.Dropdown>
+                  <div className="flex max-w-xs flex-col gap-y-2 text-sm">
                     <p>
                       Open Information, indexed from multiple decentralized data
                       sources, is structured into the RSS3 Unified Metadata
                       Schemas (UMS) format for interoperability.
                     </p>
-
                     <p className="text-xs">
                       To learn more about the UMS, please visit{" "}
                       <Link
@@ -32,10 +37,8 @@ const ActivitiesTableHeader = () => {
                       .
                     </p>
                   </div>
-                }
-              >
-                <i className="i-mingcute-question-line" />
-              </Tooltip>
+                </Popover.Dropdown>
+              </Popover>
             </div>
           </Table.Th>
           <Table.Th>Time</Table.Th>

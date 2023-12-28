@@ -24,16 +24,13 @@ const ActivitiesTableRow = ({
   const owner = isSDK ? activity.owner ?? activity.from : activity.from
   return (
     <Table.Tr
-      key={activity.id}
-      className="h-20 bg-primary/20 text-sm font-normal antialiased hover:cursor-pointer hover:bg-primary/50"
+      className="h-20"
       onClick={() => {
         onRowClick && onRowClick(activity.id)
       }}
       ref={innerRef}
     >
-      <Table.Td className="w-80 rounded-l-[5px]">
-        {formatActivityId(activity.id)}
-      </Table.Td>
+      <Table.Td>{formatActivityId(activity.id)}</Table.Td>
       <Table.Td className="space-x-2 capitalize">
         {activity.tag !== "unknown" && (
           <Badge variant="secondary">{activity.tag}</Badge>
@@ -45,7 +42,7 @@ const ActivitiesTableRow = ({
       <Table.Td>{moment(activity.timestamp * 1000).fromNow()}</Table.Td>
       <Table.Td className="capitalize">{platform}</Table.Td>
       <Table.Td className="capitalize">{network}</Table.Td>
-      <Table.Td className="rounded-r-[5px]">
+      <Table.Td>
         <HoverUserCard
           account={owner}
           address={owner}

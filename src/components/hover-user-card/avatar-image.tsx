@@ -21,13 +21,11 @@ const ProfileAvatar = ({
     () => (url ? url : `https://cdn.stamp.fyi/avatar/eth:${address}?s=100`),
     [address, url],
   )
-  const sizeClass = useMemo(() => (small ? `h-8 w-8` : `h-16 w-16`), [small])
-
   return (
     <Avatar
       src={avatar}
       alt={platform ?? ""}
-      className={cn("block overflow-hidden rounded-full", sizeClass)}
+      size={small ? "md" : "lg"}
     ></Avatar>
   )
 }

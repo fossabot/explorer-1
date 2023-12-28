@@ -8,12 +8,15 @@ dependencies:
   "@mantine/core":
     specifier: 7.3.2
     version: 7.3.2(@mantine/hooks@7.3.2)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
+  "@mantine/hooks":
+    specifier: 7.3.2
+    version: 7.3.2(react@18.2.0)
   "@rss3/js-sdk":
     specifier: 0.6.55
     version: 0.6.55
   "@rss3/mantine-theme":
-    specifier: 0.0.10
-    version: 0.0.10(@mantine/core@7.3.2)
+    specifier: 0.0.11
+    version: 0.0.11(@mantine/core@7.3.2)
   "@tanstack/react-query":
     specifier: 5.15.0
     version: 5.15.0(react@18.2.0)
@@ -858,10 +861,10 @@ packages:
       - supports-color
     dev: false
 
-  /@rss3/mantine-theme@0.0.10(@mantine/core@7.3.2):
+  /@rss3/mantine-theme@0.0.11(@mantine/core@7.3.2):
     resolution:
       {
-        integrity: sha512-c87Wrt0FuSBwi4zPwiIc5jaXQ+DJs/YGal5s/u6Jnt1+bwrZK3pyg8SHhBxd4cCN2fO/Z9FXkQdhmlrvmA54pg==,
+        integrity: sha512-9E31aepsObifGcVaDrL7Q9RDXPfL1ktjut5JMF/zNqx3BCaNwOFntt40la2+e3bEz4mXU7Mc6F4771nqzK+bpg==,
       }
     engines: { node: ">=16.6.0" }
     peerDependencies:

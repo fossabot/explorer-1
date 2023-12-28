@@ -41,22 +41,20 @@ const Activities = () => {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-        <Card>
-          <div className="flex flex-row items-center justify-center space-y-0 pb-2">
-            <div className="flex flex-wrap items-center gap-x-2 text-xl font-medium uppercase text-muted-foreground">
-              <div>Open Web Activities</div>
-              <Tooltip label="Total number of open web activities covered by RSS3 API.">
-                <i className="i-mingcute-information-line" />
-              </Tooltip>
-            </div>
+    <div className="space-y-8 max-w-6xl mx-auto">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 font-medium">
+        <Card radius="md" withBorder>
+          <div className="flex flex-row items-center justify-center pb-2 text-xl gap-x-2 text-zinc-500">
+            <div>Open Web Activities</div>
+            <Tooltip label="Total number of open web activities covered by RSS3 API.">
+              <i className="i-mingcute-information-line" />
+            </Tooltip>
           </div>
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex items-center justify-center">
             {isFetching ? (
               <Skeleton className="h-8 w-80" />
             ) : (
-              <div className="text-2xl font-bold">
+              <div className="text-2xl">
                 {(data?.total ?? 0)
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
@@ -65,17 +63,15 @@ const Activities = () => {
           </div>
         </Card>
 
-        <Card>
-          <div className="flex flex-row items-center justify-center space-y-0 pb-2">
-            <div className="text-xl font-medium uppercase text-muted-foreground">
-              Last Indexed
-            </div>
+        <Card radius="md" withBorder>
+          <div className="flex flex-row items-center justify-center pb-2 text-xl gap-x-2 text-zinc-500">
+            Last Indexed
           </div>
-          <div className="flex flex-row items-center justify-center">
+          <div className="flex items-center justify-center">
             {isFetching ? (
               <Skeleton className="h-8 w-80" />
             ) : (
-              <div className="text-2xl font-bold">
+              <div className="text-2xl">
                 {moment(data?.latestUpdate).fromNow()}
               </div>
             )}
@@ -90,7 +86,7 @@ const Activities = () => {
             router.push("/all")
           }}
         />
-        <ActivitiesTable className="min-w-full table-auto border-separate border-spacing-y-3">
+        <ActivitiesTable className="min-w-full mt-2">
           <ActivitiesTableHeader />
           <ActivitiesTableBody>
             {!isFetching &&

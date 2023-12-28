@@ -14,8 +14,9 @@
   },
   "dependencies": {
     "@mantine/core": "7.3.2",
+    "@mantine/hooks": "7.3.2",
     "@rss3/js-sdk": "0.6.55",
-    "@rss3/mantine-theme": "0.0.10",
+    "@rss3/mantine-theme": "0.0.11",
     "@tanstack/react-query": "5.15.0",
     "clsx": "2.0.0",
     "moment": "2.30.1",

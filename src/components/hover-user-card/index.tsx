@@ -11,7 +11,7 @@ import UserCard from "./user-card"
 
 interface IHoverUserCardProps {
   account: string
-  size?: number
+  size?: string
   fontClass?: string
   address?: string | null
   platform?: string | null
@@ -20,7 +20,7 @@ const HoverUserCard = ({
   account,
   address,
   platform,
-  size = 28,
+  size = "sm",
   fontClass = `text-inherit`,
 }: IHoverUserCardProps) => {
   const [show, setShow] = useState(false)
@@ -41,7 +41,7 @@ const HoverUserCard = ({
             <Avatar
               src={`https://cdn.stamp.fyi/avatar/eth:${account}?s=100`}
               alt={account}
-              style={{ width: `${size}px`, height: `${size}px` }}
+              size={size}
             ></Avatar>
             {isAddress(account)
               ? formatAddress(account)
