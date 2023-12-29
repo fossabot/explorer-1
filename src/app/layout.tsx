@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 
+import Navigation from "@/components/navigation"
 import { ColorSchemeScript, MantineProvider } from "@mantine/core"
 import { theme } from "@rss3/mantine-theme"
 
@@ -30,10 +31,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ColorSchemeScript />
-        <Providers>
-          <MantineProvider theme={theme}>{children}</MantineProvider>
-        </Providers>
+        <ColorSchemeScript strategy={""} />
+        <MantineProvider theme={theme}>
+          <Providers>
+            <Navigation />
+            <div className="max-w-[75em] mx-auto px-4 pb-10">{children}</div>
+          </Providers>
+        </MantineProvider>
       </body>
     </html>
   )

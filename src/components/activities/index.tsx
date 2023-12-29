@@ -41,7 +41,7 @@ const Activities = () => {
   }
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto">
+    <div className="space-y-8">
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 font-medium">
         <Card radius="md" withBorder>
           <div className="flex flex-row items-center justify-center pb-2 text-xl gap-x-2 text-zinc-500">
