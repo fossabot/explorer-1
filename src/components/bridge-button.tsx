@@ -8,8 +8,12 @@ import { ConnectButton as _ConnectButton } from "@rainbow-me/rainbowkit"
 
 export default function BridgeWithdrawButton({
   action,
+  hasValue,
+  onConfirm,
 }: {
   action: "Deposit" | "Withdraw"
+  hasValue: boolean
+  onConfirm: () => void
 }) {
   const targetChain = action === "Deposit" ? mainnetChain : rss3Chain
 
@@ -20,7 +24,6 @@ export default function BridgeWithdrawButton({
       {({
         account,
         chain,
-        openAccountModal,
         openConnectModal,
         authenticationStatus,
         mounted,
@@ -70,15 +73,25 @@ export default function BridgeWithdrawButton({
                 )
               }
 
-              return (
+              return hasValue ? (
                 <Button
                   fullWidth
                   size="xl"
                   radius="lg"
                   className="mt-8"
-                  onClick={openAccountModal}
+                  onClick={onConfirm}
                 >
                   Review {action}
+                </Button>
+              ) : (
+                <Button
+                  fullWidth
+                  size="xl"
+                  radius="lg"
+                  className="mt-8"
+                  disabled
+                >
+                  Enter an amount
                 </Button>
               )
             })()}
