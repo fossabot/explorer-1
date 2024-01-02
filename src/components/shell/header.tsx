@@ -7,7 +7,7 @@ import { useState } from "react"
 
 import { cn } from "@/lib/utils"
 import ConnectButton from "@/lib/wagmi/components/connect-button"
-import { AppShellHeader, Group } from "@mantine/core"
+import { AppShell, Group } from "@mantine/core"
 
 export function ShellHeader() {
   const pathname = usePathname()
@@ -44,7 +44,7 @@ export function ShellHeader() {
   const [hoverIndex, setHoverIndex] = useState(defaultIndex)
 
   return (
-    <AppShellHeader p="md">
+    <AppShell.Header p="xl" bg="#fff">
       <Group wrap="nowrap" h="100%" justify="space-between">
         <Group>
           <img src="/logo.svg" alt="logo" width={200} height={27} />
@@ -75,6 +75,6 @@ export function ShellHeader() {
         </Group>
         <ConnectButton />
       </Group>
-    </AppShellHeader>
+    </AppShell.Header>
   )
 }
