@@ -1,7 +1,7 @@
 import { defineChain } from "viem/chains/utils"
+import { mainnet, sepolia } from "wagmi/chains"
 
 import { env } from "@/env.mjs"
-import { mainnet, sepolia } from "@wagmi/core/chains"
 
 export const rss3Testnet = /*#__PURE__*/ defineChain({
   id: 2_333,
