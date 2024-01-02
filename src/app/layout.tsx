@@ -1,9 +1,10 @@
 import type { Metadata } from "next"
 
-import Navigation from "@/components/navigation"
 import { Providers } from "@/components/providers"
 
 import "./globals.css"
+
+import { Shell } from "@/components/shell"
 
 export const metadata: Metadata = {
   title: "RSS3 Explorer",
@@ -18,8 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          <Navigation />
-          <div className="max-w-[75em] mx-auto px-4 pb-10">{children}</div>
+          <Shell>{children}</Shell>
         </Providers>
       </body>
     </html>
