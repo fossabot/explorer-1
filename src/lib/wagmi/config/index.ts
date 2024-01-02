@@ -1,7 +1,8 @@
+import { createConfig, http } from "wagmi"
+import { Chain } from "wagmi/chains"
+
 import { env } from "@/env.mjs"
 import { getDefaultWallets } from "@rainbow-me/rainbowkit"
-import { createConfig, http } from "@wagmi/core"
-import { Chain } from "@wagmi/core/chains"
 
 import { mainnetChain, rss3Chain } from "./chains"
 
