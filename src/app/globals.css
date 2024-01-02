@@ -10,4 +10,5 @@
 
 body {
   @apply text-zinc-700;
+  @apply cursor-default;
 }
