@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, MotionConfig } from "framer-motion"
+import { m, MotionConfig } from "framer-motion"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -61,7 +61,7 @@ export function ShellHeader() {
                   onMouseEnter={() => setHoverIndex(index)}
                 >
                   {hoverIndex === index && (
-                    <motion.div
+                    <m.div
                       className="bg-zinc-100 absolute left-0 right-0 top-0 bottom-0 -z-20 rounded-full"
                       layoutId="nav-hover-background"
                     />
