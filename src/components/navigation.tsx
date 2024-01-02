@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 import { useState } from "react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@mantine/core"
+import ConnectButton from "@/lib/wagmi/components/connect-button"
 
 const Navigation = () => {
   const pathname = usePathname()
@@ -73,7 +73,7 @@ const Navigation = () => {
           ))}
         </MotionConfig>
       </div>
-      <Button className="ml-auto">Connect</Button>
+      <ConnectButton />
     </div>
   )
 }
