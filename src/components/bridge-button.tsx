@@ -54,7 +54,7 @@ export default function BridgeWithdrawButton({
                 )
               }
 
-              if (chain.unsupported) {
+              if (chain.id !== targetChain.id) {
                 return (
                   <Button
                     fullWidth

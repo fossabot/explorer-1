@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 
 import BridgeButton from "@/components/bridge-button"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
+import { useRSS3Balance } from "@/lib/wagmi/hooks/useRSS3Balance"
 import {
   Button,
   Card,
@@ -27,11 +28,11 @@ export default function BridgePage() {
       ? [IconEthereum, IconRss3Circle]
       : [IconRss3Circle, IconEthereum]
 
-  const balance = 100 // TODO
+  const balance = useRSS3Balance(from.id)
   const rss3Price = 0.15 // TODO
   const gas = 0.01589699045047638 // TODO
   const gasPrice = 1.5 // TODO
-  const gasSymbol = actionType === "Deposit" ? "ETH" : "RSS3"
+  const gasSymbol = from.nativeCurrency.symbol
 
   const [
     reviewModalOpened,
@@ -75,12 +76,12 @@ export default function BridgePage() {
             onChange={setTokenNumber}
           />
           <div className="flex items-center gap-1">
-            <span>Balance: {balance} RSS3</span>
+            <span>Balance: {balance?.formatted || 0} RSS3</span>
             <Button
               variant="subtle"
               className="text-primary-500 px-1 h-7"
               onClick={() => {
-                setTokenNumber(balance)
+                setTokenNumber(balance?.formatted || 0)
               }}
             >
               (Max)
