@@ -53,6 +53,21 @@ export const rss3Testnet = /*#__PURE__*/ defineChain({
         blockCreated: 4864634,
       },
     },
+    l1StandardBridge: {
+      [sourceId]: {
+        address: "0x84F0617A60d16121e7B3E9BadD3b91F73E992980",
+      },
+    },
+    l1CrossDomainMessenger: {
+      [sourceId]: {
+        address: "0x91BC106A150F7520eA97C6D61f9e6e169254730e",
+      },
+    },
+    l1Erc721Bridge: {
+      [sourceId]: {
+        address: "0x93545a2Aad3f09adB378D16c897722A95e3782D3",
+      },
+    },
   },
   testnet: true,
   sourceId,

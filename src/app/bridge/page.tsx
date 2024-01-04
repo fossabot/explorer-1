@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 
 import BridgeButton from "@/components/bridge-button"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
+import { useEstimateDepositGas } from "@/lib/wagmi/hooks/useEstimateDepositGas"
 import { useRSS3Balance } from "@/lib/wagmi/hooks/useRSS3Balance"
 import {
   Button,
@@ -30,9 +31,10 @@ export default function BridgePage() {
 
   const balance = useRSS3Balance(from.id)
   const rss3Price = 0.15 // TODO
-  const gas = 0.01589699045047638 // TODO
   const gasPrice = 1.5 // TODO
   const gasSymbol = from.nativeCurrency.symbol
+
+  const estimatedDepositGas = useEstimateDepositGas()
 
   const [
     reviewModalOpened,
@@ -109,7 +111,8 @@ export default function BridgePage() {
           <div className="flex justify-between">
             <div>Gas fee to transfer</div>
             <div className="font-semibold">
-              {gas} {gasSymbol} (${(gas * gasPrice).toFixed(2)})
+              {estimatedDepositGas.data} {gasSymbol} ($
+              {(parseFloat(estimatedDepositGas.data) * gasPrice).toFixed(2)})
             </div>
           </div>
           <div className="flex justify-between">
@@ -152,7 +155,9 @@ export default function BridgePage() {
               <div>
                 <p>Gas fee to transfer</p>
                 <p className="font-semibold">
-                  {gas} {gasSymbol} (${(gas * gasPrice).toFixed(2)})
+                  {estimatedDepositGas.data} {gasSymbol} ($
+                  {(parseFloat(estimatedDepositGas.data) * gasPrice).toFixed(2)}
+                  )
                 </p>
               </div>
               <div>
