@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import BridgeButton from "@/components/bridge-button"
 import { useEstimateDepositGas } from "@/hooks/useEstimateDepositGas"
 import { useRSS3Balance } from "@/hooks/useRSS3Balance"
+import { api } from "@/lib/trpc/client"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
 import {
   Button,
@@ -31,8 +32,6 @@ export default function BridgePage() {
 
   const fromBalance = useRSS3Balance(from.id)
   const toBalance = useRSS3Balance(to.id)
-  const rss3Price = 0.15 // TODO
-  const gasPrice = 1.5 // TODO
   const gasSymbol = from.nativeCurrency.symbol
 
   const estimatedDepositGas = useEstimateDepositGas()
@@ -45,6 +44,8 @@ export default function BridgePage() {
   useEffect(() => {
     setTokenNumber("")
   }, [actionType])
+
+  const tokenPrice = api.thirdParty.tokenPrice.useQuery()
 
   return (
     <div className="flex items-center justify-center pt-32">
@@ -113,7 +114,11 @@ export default function BridgePage() {
             <div>Gas fee to transfer</div>
             <div className="font-semibold">
               {estimatedDepositGas.data} {gasSymbol} ($
-              {(parseFloat(estimatedDepositGas.data) * gasPrice).toFixed(2)})
+              {(
+                parseFloat(estimatedDepositGas.data) *
+                (tokenPrice.data?.ethereum || 0)
+              ).toFixed(2)}
+              )
             </div>
           </div>
           <div className="flex justify-between">
@@ -149,7 +154,10 @@ export default function BridgePage() {
                 <p>Amount to deposit</p>
                 <p className="font-semibold">
                   {tokenNumber} RSS3 ($
-                  {(parseFloat(tokenNumber + "" || "0") * rss3Price).toFixed(2)}
+                  {(
+                    parseFloat(tokenNumber + "" || "0") *
+                    (tokenPrice.data?.rss3 || 0)
+                  ).toFixed(2)}
                   )
                 </p>
               </div>
@@ -157,7 +165,10 @@ export default function BridgePage() {
                 <p>Gas fee to transfer</p>
                 <p className="font-semibold">
                   {estimatedDepositGas.data} {gasSymbol} ($
-                  {(parseFloat(estimatedDepositGas.data) * gasPrice).toFixed(2)}
+                  {(
+                    parseFloat(estimatedDepositGas.data) *
+                    (tokenPrice.data?.ethereum || 0)
+                  ).toFixed(2)}
                   )
                 </p>
               </div>
