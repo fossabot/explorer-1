@@ -25,6 +25,7 @@
     "framer-motion": "10.16.16",
     "moment": "2.30.1",
     "next": "14.0.4",
+    "op-viem": "npm:@songkeys/op-viem@1.3.1-alpha.0",
     "op-wagmi": "npm:@songkeys/op-wagmi@0.2.3-alpha.0",
     "react": "^18",
     "react-dom": "^18",
