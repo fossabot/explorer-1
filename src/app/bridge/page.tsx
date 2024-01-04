@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react"
 
 import BridgeButton from "@/components/bridge-button"
+import { useEstimateDepositGas } from "@/hooks/useEstimateDepositGas"
+import { useRSS3Balance } from "@/hooks/useRSS3Balance"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
-import { useEstimateDepositGas } from "@/lib/wagmi/hooks/useEstimateDepositGas"
-import { useRSS3Balance } from "@/lib/wagmi/hooks/useRSS3Balance"
 import {
   Button,
   Card,
