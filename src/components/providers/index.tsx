@@ -1,6 +1,6 @@
 import { headers } from "next/headers"
 
-import { MotionProvider } from "@/lib/motion"
+import { MotionProvider } from "@/lib/motion/provider"
 import { ThemeProvider } from "@/lib/theme/provider"
 import { TrpcProvider } from "@/lib/trpc/provider"
 import { RainbowKitProvider, WagmiProvider } from "@/lib/wagmi/provider"
