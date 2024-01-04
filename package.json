@@ -14,6 +14,7 @@
     "**/*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
+    "@mantine/charts": "7.4.1",
     "@mantine/core": "7.4.1",
     "@mantine/form": "7.4.1",
     "@mantine/hooks": "7.4.1",
@@ -38,6 +39,7 @@
     "op-wagmi": "npm:@songkeys/op-wagmi@0.2.3-alpha.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "recharts": "2",
     "superjson": "2.2.1",
     "tailwind-merge": "2.2.0",
     "url-metadata": "3.3.1",
