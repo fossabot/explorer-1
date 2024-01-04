@@ -32,7 +32,9 @@ export const useRSS3Balance = (chainId: number) => {
   })
 
   if (!account.address) {
-    return undefined
+    return {
+      formatted: "0",
+    }
   } else if (chainId === rss3Chain.id) {
     return rss3ChainBalance.data
       ? {
@@ -43,7 +45,9 @@ export const useRSS3Balance = (chainId: number) => {
             rss3ChainBalance.data.decimals,
           ),
         }
-      : undefined
+      : {
+          formatted: "0",
+        }
   } else if (chainId === mainnetChain.id) {
     return mainnetChainBalance.data
       ? {
@@ -54,8 +58,12 @@ export const useRSS3Balance = (chainId: number) => {
             mainnetChainBalance.data[1],
           ),
         }
-      : undefined
+      : {
+          formatted: "0",
+        }
   } else {
-    return undefined
+    return {
+      formatted: "0",
+    }
   }
 }

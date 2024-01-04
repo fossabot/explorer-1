@@ -29,7 +29,8 @@ export default function BridgePage() {
       ? [IconEthereum, IconRss3Circle]
       : [IconRss3Circle, IconEthereum]
 
-  const balance = useRSS3Balance(from.id)
+  const fromBalance = useRSS3Balance(from.id)
+  const toBalance = useRSS3Balance(to.id)
   const rss3Price = 0.15 // TODO
   const gasPrice = 1.5 // TODO
   const gasSymbol = from.nativeCurrency.symbol
@@ -78,12 +79,12 @@ export default function BridgePage() {
             onChange={setTokenNumber}
           />
           <div className="flex items-center gap-1">
-            <span>Balance: {balance?.formatted || 0} RSS3</span>
+            <span>Balance: {fromBalance.formatted} RSS3</span>
             <Button
               variant="subtle"
               className="text-primary-500 px-1 h-7"
               onClick={() => {
-                setTokenNumber(balance?.formatted || 0)
+                setTokenNumber(fromBalance.formatted)
               }}
             >
               (Max)
@@ -100,7 +101,7 @@ export default function BridgePage() {
             <span className="font-semibold">{to.name}</span>
           </div>
           <div>You will receive: {tokenNumber || 0} RSS3</div>
-          <div>Balance: 0 RSS3</div>
+          <div>Balance: {toBalance.formatted} RSS3</div>
         </Card>
         <BridgeButton
           action={actionType as "Deposit" | "Withdraw"}
