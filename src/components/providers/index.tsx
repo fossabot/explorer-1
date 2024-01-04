@@ -1,6 +1,8 @@
+import { headers } from "next/headers"
+
 import { MotionProvider } from "@/lib/motion"
-import { QueryProvider } from "@/lib/query/provider"
 import { ThemeProvider } from "@/lib/theme/provider"
+import { TrpcProvider } from "@/lib/trpc/provider"
 import { RainbowKitProvider, WagmiProvider } from "@/lib/wagmi/provider"
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -8,9 +10,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <ThemeProvider>
       <MotionProvider>
         <WagmiProvider>
-          <QueryProvider>
+          <TrpcProvider headers={headers()}>
             <RainbowKitProvider>{children}</RainbowKitProvider>
-          </QueryProvider>
+          </TrpcProvider>
         </WagmiProvider>
       </MotionProvider>
     </ThemeProvider>
