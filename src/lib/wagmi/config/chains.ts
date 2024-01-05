@@ -10,8 +10,8 @@ export const rss3Testnet = /*#__PURE__*/ defineChain({
   name: "RSS3 Chain Testnet",
   nativeCurrency: {
     decimals: 18,
-    name: "ETH",
-    symbol: "ETH",
+    name: "RSS3",
+    symbol: "RSS3",
   },
   rpcUrls: {
     public: {

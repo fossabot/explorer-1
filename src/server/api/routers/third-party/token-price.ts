@@ -30,8 +30,9 @@ export const tokenPriceApi = publicProcedure.query(async ({ input }) => {
         }
       }
       return {
-        rss3: json.data[17917].quote.USD.price,
-        ethereum: json.data[1027].quote.USD.price,
+        RSS3: json.data[17917].quote.USD.price,
+        ETH: json.data[1027].quote.USD.price,
+        SEP: 10,
       }
     })
 

@@ -40,8 +40,6 @@ export default function BridgePage() {
   const toBalance = useRSS3Balance(to.id)
   const gasSymbol = from.nativeCurrency.symbol
 
-  const estimatedDepositGas = useEstimateDepositGas()
-
   const maxBalance = parseFloat(fromBalance.formatted)
   const formSchema = useMemo(
     () =>
@@ -70,7 +68,14 @@ export default function BridgePage() {
     form.reset()
   }, [actionType])
 
+  const estimatedDepositGas = useEstimateDepositGas()
   const tokenPrice = api.thirdParty.tokenPrice.useQuery()
+  const gasWorth = (
+    parseFloat(estimatedDepositGas.data) * (tokenPrice.data?.[gasSymbol] || 0)
+  ).toFixed(3)
+  const rss3Worth = (form.values.amount * (tokenPrice.data?.RSS3 || 0)).toFixed(
+    3,
+  )
 
   const requestedAmount = parseUnits(
     form.values.amount.toString(),
@@ -168,12 +173,7 @@ export default function BridgePage() {
           <div className="flex justify-between">
             <div>Gas fee to transfer</div>
             <div className="font-semibold">
-              {estimatedDepositGas.data} {gasSymbol} ($
-              {(
-                parseFloat(estimatedDepositGas.data) *
-                (tokenPrice.data?.ethereum || 0)
-              ).toFixed(2)}
-              )
+              {estimatedDepositGas.data} {gasSymbol} (${gasWorth})
             </div>
           </div>
           <div className="flex justify-between">
@@ -208,22 +208,13 @@ export default function BridgePage() {
               <div>
                 <p>Amount to deposit</p>
                 <p className="font-semibold">
-                  {form.values.amount} RSS3 ($
-                  {(form.values.amount * (tokenPrice.data?.rss3 || 0)).toFixed(
-                    2,
-                  )}
-                  )
+                  {form.values.amount} RSS3 (${rss3Worth})
                 </p>
               </div>
               <div>
                 <p>Gas fee to transfer</p>
                 <p className="font-semibold">
-                  {estimatedDepositGas.data} {gasSymbol} ($
-                  {(
-                    parseFloat(estimatedDepositGas.data) *
-                    (tokenPrice.data?.ethereum || 0)
-                  ).toFixed(2)}
-                  )
+                  {estimatedDepositGas.data} {gasSymbol} (${gasWorth})
                 </p>
               </div>
               <div>
