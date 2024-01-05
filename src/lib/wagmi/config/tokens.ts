@@ -17,6 +17,6 @@ export const rss3Tokens: {
     address: "0xc98d64da73a6616c42117b582e832812e7b8d57f",
   },
   [rss3Testnet.id]: {
-    address: "0xE6991B64d60BE478D92eF27384F5A529261DF107",
+    address: "0x4200000000000000000000000000000000000301",
   },
 }

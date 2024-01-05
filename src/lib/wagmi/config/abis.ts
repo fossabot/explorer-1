@@ -1,5 +1,7 @@
+import { rss3Chain } from "@/lib/wagmi/config/chains"
+
 export const abis = {
-  "0x84F0617A60d16121e7B3E9BadD3b91F73E992980": [
+  [rss3Chain.contracts.l1StandardBridge[rss3Chain.sourceId].address]: [
     {
       inputs: [
         {
