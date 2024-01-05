@@ -41,8 +41,8 @@ export const useRSS3Balance = (chainId: number) => {
           decimals: rss3ChainBalance.data.decimals,
           value: rss3ChainBalance.data.value,
           formatted: formatUnits(
-            rss3ChainBalance.data.value,
-            rss3ChainBalance.data.decimals,
+            rss3ChainBalance.data.value ?? 0n,
+            rss3ChainBalance.data.decimals || rss3Tokens.decimals,
           ),
         }
       : {
@@ -51,11 +51,11 @@ export const useRSS3Balance = (chainId: number) => {
   } else if (chainId === mainnetChain.id) {
     return mainnetChainBalance.data
       ? {
-          decimals: mainnetChainBalance.data[1],
-          value: mainnetChainBalance.data[0],
+          decimals: mainnetChainBalance.data?.[1],
+          value: mainnetChainBalance.data?.[0],
           formatted: formatUnits(
-            mainnetChainBalance.data[0],
-            mainnetChainBalance.data[1],
+            mainnetChainBalance.data?.[0] ?? 0n,
+            mainnetChainBalance.data?.[1] || rss3Tokens.decimals,
           ),
         }
       : {

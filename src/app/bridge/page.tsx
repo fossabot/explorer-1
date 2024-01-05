@@ -1,12 +1,18 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { valibotResolver } from "mantine-form-valibot-resolver"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { Input, maxValue, minValue, number, object } from "valibot"
+import { parseUnits } from "viem"
 
 import BridgeButton from "@/components/bridge-button"
 import { useEstimateDepositGas } from "@/hooks/useEstimateDepositGas"
+import { useRSS3Allowance } from "@/hooks/useRSS3Allowance"
 import { useRSS3Balance } from "@/hooks/useRSS3Balance"
+import { useRSS3Deposit } from "@/hooks/useRSS3Deposit"
 import { api } from "@/lib/trpc/client"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
+import { rss3Tokens } from "@/lib/wagmi/config/tokens"
 import {
   Button,
   Card,
@@ -14,11 +20,11 @@ import {
   NumberInput,
   SegmentedControl,
 } from "@mantine/core"
+import { useForm } from "@mantine/form"
 import { useDisclosure } from "@mantine/hooks"
 import { IconEthereum, IconRss3Circle } from "@rss3/web3-icons-react"
 
 export default function BridgePage() {
-  const [tokenNumber, setTokenNumber] = useState<string | number>()
   const [actionType, setActionType] = useState("Deposit")
 
   const [from, to] =
@@ -36,16 +42,53 @@ export default function BridgePage() {
 
   const estimatedDepositGas = useEstimateDepositGas()
 
+  const maxBalance = parseFloat(fromBalance.formatted)
+  const formSchema = useMemo(
+    () =>
+      object({
+        amount: number([
+          minValue(0),
+          maxValue(maxBalance, `Insufficient balance (max: ${maxBalance})`),
+        ]),
+      }),
+    [maxBalance],
+  )
+
+  const form = useForm<Input<typeof formSchema>>({
+    initialValues: {
+      amount: 0,
+    },
+    validate: valibotResolver(formSchema),
+  })
+
   const [
     reviewModalOpened,
     { open: reviewModalOpen, close: reviewModalClose },
   ] = useDisclosure(false)
 
   useEffect(() => {
-    setTokenNumber("")
+    form.reset()
   }, [actionType])
 
   const tokenPrice = api.thirdParty.tokenPrice.useQuery()
+
+  const requestedAmount = parseUnits(
+    form.values.amount.toString(),
+    rss3Tokens.decimals,
+  )
+  const rss3Allowance = useRSS3Allowance()
+
+  const deposit = useRSS3Deposit()
+
+  const isExceededAllowance = requestedAmount > (rss3Allowance.data || 0)
+
+  const handleDeposit = (values: Input<typeof formSchema>) => {
+    if (isExceededAllowance) {
+      console.log("isExceededAllowance")
+    } else {
+      deposit.write(parseUnits(values.amount.toString(), rss3Tokens.decimals))
+    }
+  }
 
   return (
     <div className="flex items-center justify-center pt-32">
@@ -65,27 +108,34 @@ export default function BridgePage() {
             <FromIcon className="w-5 h-5" />
             <span className="font-semibold">{from.name}</span>
           </div>
-          <NumberInput
-            size="xl"
-            radius="lg"
-            rightSection={
-              <div className="flex items-center gap-2 text-zinc-700">
-                <IconRss3Circle className="w-10 h-10" />
-                RSS3
-              </div>
-            }
-            rightSectionWidth={150}
-            placeholder="0.0"
-            value={tokenNumber}
-            onChange={setTokenNumber}
-          />
+          <form onSubmit={form.onSubmit(handleDeposit)}>
+            <NumberInput
+              size="xl"
+              radius="lg"
+              rightSection={
+                <div className="flex items-center gap-2 text-zinc-700">
+                  <IconRss3Circle className="w-10 h-10" />
+                  RSS3
+                </div>
+              }
+              rightSectionWidth={150}
+              placeholder="0.0"
+              styles={{
+                error: {
+                  fontSize: "0.9rem",
+                  marginTop: "0.75rem",
+                },
+              }}
+              {...form.getInputProps("amount")}
+            />
+          </form>
           <div className="flex items-center gap-1">
             <span>Balance: {fromBalance.formatted} RSS3</span>
             <Button
               variant="subtle"
               className="text-primary-500 px-1 h-7"
               onClick={() => {
-                setTokenNumber(fromBalance.formatted)
+                form.setFieldValue("amount", maxBalance)
               }}
             >
               (Max)
@@ -101,13 +151,18 @@ export default function BridgePage() {
             <ToIcon className="w-5 h-5" />
             <span className="font-semibold">{to.name}</span>
           </div>
-          <div>You will receive: {tokenNumber || 0} RSS3</div>
+          <div>You will receive: {form.values.amount} RSS3</div>
           <div>Balance: {toBalance.formatted} RSS3</div>
         </Card>
         <BridgeButton
           action={actionType as "Deposit" | "Withdraw"}
-          hasValue={!!tokenNumber}
-          onConfirm={() => reviewModalOpen()}
+          hasValue={!!form.values.amount}
+          onConfirm={() => {
+            const result = form.validate()
+            if (!result.hasErrors) {
+              reviewModalOpen()
+            }
+          }}
         />
         <div className="mt-8 text-sm">
           <div className="flex justify-between">
@@ -136,7 +191,7 @@ export default function BridgePage() {
             radius="lg"
             padding="xl"
           >
-            <div className="space-y-6">
+            <form className="space-y-6" onSubmit={form.onSubmit(handleDeposit)}>
               <div>
                 <div className="flex items-center text-lg">
                   <div className="flex items-center gap-2">
@@ -153,11 +208,10 @@ export default function BridgePage() {
               <div>
                 <p>Amount to deposit</p>
                 <p className="font-semibold">
-                  {tokenNumber} RSS3 ($
-                  {(
-                    parseFloat(tokenNumber + "" || "0") *
-                    (tokenPrice.data?.rss3 || 0)
-                  ).toFixed(2)}
+                  {form.values.amount} RSS3 ($
+                  {(form.values.amount * (tokenPrice.data?.rss3 || 0)).toFixed(
+                    2,
+                  )}
                   )
                 </p>
               </div>
@@ -176,10 +230,10 @@ export default function BridgePage() {
                 <p>Time to transfer</p>
                 <p className="font-semibold">~1 minute</p>
               </div>
-              <Button fullWidth size="lg" radius="lg">
+              <Button fullWidth size="lg" radius="lg" type="submit">
                 {actionType}
               </Button>
-            </div>
+            </form>
           </Modal>
         ) : null}
       </Card>

@@ -8,6 +8,9 @@ dependencies:
   "@mantine/core":
     specifier: 7.4.0
     version: 7.4.0(@mantine/hooks@7.4.0)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)
+  "@mantine/form":
+    specifier: 7.4.0
+    version: 7.4.0(react@18.2.0)
   "@mantine/hooks":
     specifier: 7.4.0
     version: 7.4.0(react@18.2.0)
@@ -53,6 +56,9 @@ dependencies:
   framer-motion:
     specifier: 10.17.4
     version: 10.17.4(react-dom@18.2.0)(react@18.2.0)
+  mantine-form-valibot-resolver:
+    specifier: 1.0.0
+    version: 1.0.0(@mantine/form@7.4.0)(valibot@0.25.0)
   moment:
     specifier: 2.30.1
     version: 2.30.1
@@ -80,6 +86,9 @@ dependencies:
   undici:
     specifier: 6.2.1
     version: 6.2.1
+  valibot:
+    specifier: 0.25.0
+    version: 0.25.0
   viem:
     specifier: 2.0.0
     version: 2.0.0(typescript@5.3.3)(zod@3.22.4)
@@ -2690,6 +2699,19 @@ packages:
       type-fest: 3.13.1
     transitivePeerDependencies:
       - "@types/react"
+    dev: false
+
+  /@mantine/form@7.4.0(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-JI/o2nECWct/Kvn3GF6VplHyJeaLy0q/jGNEB/F4yt12mAYBsux6vPfAhpWrKKZ8Jt31RI+ikn6R4UcY1HGIAw==,
+      }
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      fast-deep-equal: 3.1.3
+      klona: 2.0.6
+      react: 18.2.0
     dev: false
 
   /@mantine/hooks@7.4.0(react@18.2.0):
@@ -7818,7 +7840,6 @@ packages:
       {
         integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==,
       }
-    dev: true
 
   /fast-glob@3.3.2:
     resolution:
@@ -9540,6 +9561,14 @@ packages:
     engines: { node: ">=6" }
     dev: false
 
+  /klona@2.0.6:
+    resolution:
+      {
+        integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==,
+      }
+    engines: { node: ">= 8" }
+    dev: false
+
   /kolorist@1.8.0:
     resolution:
       {
@@ -9901,6 +9930,20 @@ packages:
       }
     dependencies:
       tmpl: 1.0.5
+    dev: false
+
+  /mantine-form-valibot-resolver@1.0.0(@mantine/form@7.4.0)(valibot@0.25.0):
+    resolution:
+      {
+        integrity: sha512-OpqJc3wA17jhcO4FXi0Ku2lfoWnQMN6ExmTUZWBY6TGKY7mfc4v3Bkacacz1CvbYeQ7qOdf+uZLarrjwSoXiVQ==,
+      }
+    engines: { node: ">=16.6.0" }
+    peerDependencies:
+      "@mantine/form": ">=7.0.0"
+      valibot: ">=0.24.1"
+    dependencies:
+      "@mantine/form": 7.4.0(react@18.2.0)
+      valibot: 0.25.0
     dev: false
 
   /marky@1.2.5:
@@ -13818,6 +13861,13 @@ packages:
         integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==,
       }
     hasBin: true
+    dev: false
+
+  /valibot@0.25.0:
+    resolution:
+      {
+        integrity: sha512-cmD0ca15oyAbT75iYLNW6uU6doAeIwYfOshpXka/E1Bx4frzbkrgb7gvkI7K0YK/DVOksei4FfxWfRoBP3NFTg==,
+      }
     dev: false
 
   /valtio@1.11.2(@types/react@18.2.46)(react@18.2.0):
