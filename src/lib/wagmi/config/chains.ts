@@ -28,10 +28,10 @@ export const rss3Testnet = /*#__PURE__*/ defineChain({
     },
   },
   contracts: {
-    // multicall3: {
-    //   address: "0x0",
-    //   blockCreated: 0,
-    // },
+    multicall3: {
+      address: "0x7B1E82B72f41778E5E80b0e0a902247c96fc3450",
+      blockCreated: 4432,
+    },
     gasPriceOracle: { address: "0x420000000000000000000000000000000000000F" },
     l1Block: { address: "0x4200000000000000000000000000000000000015" },
     l2CrossDomainMessenger: {
