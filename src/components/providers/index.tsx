@@ -13,7 +13,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <WagmiProvider>
           <TrpcProvider headers={headers()}>
             <RainbowKitProvider>
-              <Notifications position="top-center" />
+              <Notifications />
               {children}
             </RainbowKitProvider>
           </TrpcProvider>

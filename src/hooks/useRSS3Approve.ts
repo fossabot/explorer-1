@@ -1,17 +1,16 @@
-import { useWriteDepositERC20 } from "op-wagmi"
 import { useEffect } from "react"
-import { zeroAddress, type WriteContractErrorType } from "viem"
-import { useAccount, useWaitForTransactionReceipt } from "wagmi"
+import { erc20Abi } from "viem"
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi"
 
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
 import { rss3Tokens } from "@/lib/wagmi/config/tokens"
 import { showNotification } from "@mantine/notifications"
 
-export function useRSS3Deposit() {
-  const { writeDepositERC20, data, isPending, isSuccess, reset } =
-    useWriteDepositERC20({
+export function useRSS3Approve() {
+  const { writeContract, data, isPending, isSuccess, reset } = useWriteContract(
+    {
       mutation: {
-        onError: (error: WriteContractErrorType) => {
+        onError: (error) => {
           showNotification({
             color: "red",
             title: "Deposit failed",
@@ -19,9 +18,8 @@ export function useRSS3Deposit() {
           })
         },
       },
-    })
-
-  const account = useAccount()
+    },
+  )
 
   const waitForTransaction = useWaitForTransactionReceipt({
     hash: data,
@@ -32,22 +30,22 @@ export function useRSS3Deposit() {
     if (waitForTransaction.isSuccess) {
       showNotification({
         color: "teal",
-        title: "Deposit successful",
-        message: "Your $RSS3 tokens have been deposited",
+        title: "Approve successful",
+        message: "Your $RSS3 tokens have been approved",
       })
     }
   }, [waitForTransaction.isSuccess])
 
   return {
     write: (value: bigint) =>
-      writeDepositERC20({
-        args: {
-          l1Token: rss3Tokens[mainnetChain.id].address,
-          l2Token: rss3Tokens[rss3Chain.id].address,
-          to: account.address || zeroAddress,
-          amount: value,
-        },
-        l2ChainId: rss3Chain.id,
+      writeContract({
+        address: rss3Tokens[mainnetChain.id].address,
+        abi: erc20Abi,
+        functionName: "approve",
+        args: [
+          rss3Chain.contracts.l1StandardBridge[rss3Chain.sourceId].address,
+          value,
+        ],
       }),
     isPending: isPending || (data && waitForTransaction.isPending),
     isSuccess: isSuccess && data && waitForTransaction.isSuccess,

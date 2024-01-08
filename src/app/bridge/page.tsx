@@ -3,11 +3,12 @@
 import { valibotResolver } from "mantine-form-valibot-resolver"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { Input, maxValue, minValue, number, object } from "valibot"
-import { parseUnits } from "viem"
+import { formatUnits, parseUnits } from "viem"
 
 import BridgeButton from "@/components/bridge-button"
 import { useEstimateDepositGas } from "@/hooks/useEstimateDepositGas"
 import { useRSS3Allowance } from "@/hooks/useRSS3Allowance"
+import { useRSS3Approve } from "@/hooks/useRSS3Approve"
 import { useRSS3Balance } from "@/hooks/useRSS3Balance"
 import { useRSS3Deposit } from "@/hooks/useRSS3Deposit"
 import { api } from "@/lib/trpc/client"
@@ -82,18 +83,44 @@ export default function BridgePage() {
     rss3Tokens.decimals,
   )
   const rss3Allowance = useRSS3Allowance()
+  const rss3Approve = useRSS3Approve()
 
-  const deposit = useRSS3Deposit()
+  const [
+    approveModalOpened,
+    { open: approveModalOpen, close: approveModalClose },
+  ] = useDisclosure(false)
+
+  const rss3Deposit = useRSS3Deposit()
 
   const isExceededAllowance = requestedAmount > (rss3Allowance.data || 0)
 
-  const handleDeposit = (values: Input<typeof formSchema>) => {
-    if (isExceededAllowance) {
-      console.log("isExceededAllowance")
-    } else {
-      deposit.write(parseUnits(values.amount.toString(), rss3Tokens.decimals))
+  const onConfirm = useCallback(() => {
+    const result = form.validate()
+    if (!result.hasErrors) {
+      if (isExceededAllowance) {
+        approveModalOpen()
+      } else {
+        reviewModalOpen()
+      }
     }
+  }, [form, reviewModalOpen, isExceededAllowance, approveModalOpen])
+
+  const handleDeposit = () => {
+    rss3Deposit.write(requestedAmount)
   }
+
+  useEffect(() => {
+    if (rss3Approve.isSuccess) {
+      rss3Allowance.refetch().then((allowance) => {
+        const isExceededAllowance = requestedAmount > (allowance.data || 0)
+        if (!isExceededAllowance) {
+          approveModalClose()
+          reviewModalOpen()
+        }
+        rss3Approve.reset()
+      })
+    }
+  }, [rss3Approve.isSuccess])
 
   return (
     <div className="flex items-center justify-center pt-32">
@@ -162,12 +189,7 @@ export default function BridgePage() {
         <BridgeButton
           action={actionType as "Deposit" | "Withdraw"}
           hasValue={!!form.values.amount}
-          onConfirm={() => {
-            const result = form.validate()
-            if (!result.hasErrors) {
-              reviewModalOpen()
-            }
-          }}
+          onConfirm={onConfirm}
         />
         <div className="mt-8 text-sm">
           <div className="flex justify-between">
@@ -181,6 +203,49 @@ export default function BridgePage() {
             <div className="font-semibold">~1 minute</div>
           </div>
         </div>
+        {actionType === "Deposit" && (
+          <Modal
+            opened={approveModalOpened}
+            onClose={approveModalClose}
+            title={
+              <div className="font-bold text-xl">
+                🫣 One More Step: Approve Token Allowance
+              </div>
+            }
+            centered
+            size="lg"
+            radius="lg"
+            padding="xl"
+          >
+            <div className="mb-6">
+              <p>
+                Please increase your allowance to a minimum of{" "}
+                <b className="font-semibold">{form.values.amount} RSS3</b>
+              </p>
+              <p>
+                The current allowance is{" "}
+                <b className="font-semibold">
+                  {formatUnits(rss3Allowance.data || 0n, rss3Tokens.decimals)}{" "}
+                  RSS3
+                </b>
+              </p>
+              <p className="text-zinc-500 text-sm my-4">
+                *Allowance is a predetermined limit set by you on how much $RSS3
+                can be managed by the RSS3 Billing contract.
+              </p>
+            </div>
+            <Button
+              fullWidth
+              size="lg"
+              radius="lg"
+              type="submit"
+              onClick={() => rss3Approve.write(requestedAmount)}
+              loading={rss3Approve.isPending || rss3Allowance.isLoading}
+            >
+              Approve
+            </Button>
+          </Modal>
+        )}
         {actionType === "Deposit" ? (
           <Modal
             opened={reviewModalOpened}
@@ -221,7 +286,13 @@ export default function BridgePage() {
                 <p>Time to transfer</p>
                 <p className="font-semibold">~1 minute</p>
               </div>
-              <Button fullWidth size="lg" radius="lg" type="submit">
+              <Button
+                fullWidth
+                size="lg"
+                radius="lg"
+                type="submit"
+                loading={rss3Deposit.isPending}
+              >
                 {actionType}
               </Button>
             </form>
