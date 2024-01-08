@@ -2,21 +2,17 @@ import { z } from "zod"
 
 import { publicProcedure } from "@/lib/trpc/server"
 
-import { eiPool } from "../../pools"
+import { fetchEi } from "../../fetchers"
 import { BridgingListResponse } from "../../types"
 
 export const manyApi = publicProcedure
   .input(z.object({}))
   .query(async ({ input }) => {
-    const result = await eiPool
-      .request({
-        method: "GET",
-        path: "/bridgings",
-        query: {},
-      })
-      .then(async (res) => {
-        return res.body.json() as Promise<BridgingListResponse>
-      })
+    const result = await fetchEi("/bridgings", {
+      method: "GET",
+    }).then((res) => {
+      return res.json() as Promise<BridgingListResponse>
+    })
 
     return result
   })

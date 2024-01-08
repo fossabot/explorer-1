@@ -1,5 +1,3 @@
-// https://backend.dev.copilot.xyz/docs
-
 import { createTRPCRouter } from "@/lib/trpc/server"
 
 import { manyApi } from "./many"

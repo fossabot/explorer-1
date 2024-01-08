@@ -39,7 +39,6 @@
     "react-dom": "18.2.0",
     "superjson": "2.2.1",
     "tailwind-merge": "2.2.0",
-    "undici": "6.2.1",
     "valibot": "0.25.0",
     "viem": "2.0.0",
     "wagmi": "2.0.1",

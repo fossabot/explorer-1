@@ -2,21 +2,17 @@ import { z } from "zod"
 
 import { publicProcedure } from "@/lib/trpc/server"
 
-import { eiPool } from "../../pools"
+import { fetchEi } from "../../fetchers"
 import { StakingListResponse } from "../../types"
 
 export const manyApi = publicProcedure
   .input(z.object({}))
   .query(async ({ input }) => {
-    const result = await eiPool
-      .request({
-        method: "GET",
-        path: "/stakings",
-        query: {},
-      })
-      .then(async (res) => {
-        return res.body.json() as Promise<StakingListResponse>
-      })
+    const result = await fetchEi("/stakings", {
+      method: "GET",
+    }).then((res) => {
+      return res.json() as Promise<StakingListResponse>
+    })
 
     return result
   })

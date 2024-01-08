@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import { publicProcedure } from "@/lib/trpc/server"
 
-import { giPool } from "../../pools"
+import { fetchGi } from "../../fetchers"
 import { NodeItemResponse } from "../../types"
 
 export const oneApi = publicProcedure
@@ -12,15 +12,11 @@ export const oneApi = publicProcedure
     }),
   )
   .query(async ({ input }) => {
-    const result = await giPool
-      .request({
-        method: "GET",
-        path: `/nodes/${input.id}`,
-        query: {},
-      })
-      .then(async (res) => {
-        return res.body.json() as Promise<NodeItemResponse>
-      })
+    const result = await fetchGi(`/nodes/${input.id}`, {
+      method: "GET",
+    }).then((res) => {
+      return res.json() as Promise<NodeItemResponse>
+    })
 
     return result
   })

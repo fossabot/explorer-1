@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import { publicProcedure } from "@/lib/trpc/server"
 
-import { eiPool } from "../../pools"
+import { fetchEi } from "../../fetchers"
 import { BridgingItemResponse } from "../../types"
 
 export const oneApi = publicProcedure
@@ -12,15 +12,11 @@ export const oneApi = publicProcedure
     }),
   )
   .query(async ({ input }) => {
-    const result = await eiPool
-      .request({
-        method: "GET",
-        path: `/bridgings/${input.id}`,
-        query: {},
-      })
-      .then(async (res) => {
-        return res.body.json() as Promise<BridgingItemResponse>
-      })
+    const result = await fetchEi(`/bridgings/${input.id}`, {
+      method: "GET",
+    }).then((res) => {
+      return res.json() as Promise<BridgingItemResponse>
+    })
 
     return result
   })
