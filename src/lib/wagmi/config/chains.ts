@@ -29,8 +29,8 @@ export const rss3Testnet = /*#__PURE__*/ defineChain({
   },
   contracts: {
     multicall3: {
-      address: "0x7B1E82B72f41778E5E80b0e0a902247c96fc3450",
-      blockCreated: 4432,
+      address: "0xBAb79A19B937e38d18592C3C9292782700Edf0a2",
+      blockCreated: 5127,
     },
     gasPriceOracle: { address: "0x420000000000000000000000000000000000000F" },
     l1Block: { address: "0x4200000000000000000000000000000000000015" },
@@ -44,28 +44,28 @@ export const rss3Testnet = /*#__PURE__*/ defineChain({
     },
     l2OutputOracle: {
       [sourceId]: {
-        address: "0x6e8042cd38359E0FB0aB4d478F58c181c0A8B833",
+        address: "0xb6eB7a53B0BD7d17De9232aE9bD9605b9c750237",
       },
     },
     portal: {
       [sourceId]: {
-        address: "0xdcF0232D4c8f1FcAbbFF53046F6A5Cf7c63d0b83",
-        blockCreated: 5025370,
+        address: "0xb58f3f17Ef3fAF6cd1C4Fa87b6e15A97B653993E",
+        blockCreated: 5045289,
       },
     },
     l1StandardBridge: {
       [sourceId]: {
-        address: "0x308C91f13De69BD8c029460a4742e21d3540E850",
+        address: "0xc575bd904D16a433624db98D01d5AbD5c92D0F38",
       },
     },
     l1CrossDomainMessenger: {
       [sourceId]: {
-        address: "0x8A5d936753Cd8982B939eE6432BEeC01387D9703",
+        address: "0x17C635E784B0f098Ab57A39d6dDeA0C786A3AfC1",
       },
     },
     l1Erc721Bridge: {
       [sourceId]: {
-        address: "0x040031AF5B49AdBc8b73af0de02c1E9099D559a7",
+        address: "0xEc04C4F1dB8DC940C21a1954f71dF3cF90d5a6de",
       },
     },
   },

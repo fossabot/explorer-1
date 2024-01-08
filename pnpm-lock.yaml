@@ -69,8 +69,8 @@ dependencies:
     specifier: npm:@songkeys/op-viem@1.3.1-alpha.1
     version: /@songkeys/op-viem@1.3.1-alpha.1(@wagmi/core@2.0.1)(typescript@5.3.3)(viem@2.0.0)(wagmi@2.0.1)(zod@3.22.4)
   op-wagmi:
-    specifier: npm:@songkeys/op-wagmi@0.2.3-alpha.1
-    version: /@songkeys/op-wagmi@0.2.3-alpha.1(@songkeys/op-viem@1.3.1-alpha.1)(@tanstack/react-query@5.17.1)(@wagmi/core@2.0.1)(typescript@5.3.3)(viem@2.0.0)(wagmi@2.0.1)(zod@3.22.4)
+    specifier: npm:@songkeys/op-wagmi@0.2.3-alpha.2
+    version: /@songkeys/op-wagmi@0.2.3-alpha.2(@songkeys/op-viem@1.3.1-alpha.1)(@tanstack/react-query@5.17.1)(@wagmi/core@2.0.1)(typescript@5.3.3)(viem@2.0.0)(wagmi@2.0.1)(zod@3.22.4)
   react:
     specifier: 18.2.0
     version: 18.2.0
@@ -4081,10 +4081,10 @@ packages:
       - zod
     dev: false
 
-  /@songkeys/op-wagmi@0.2.3-alpha.1(@songkeys/op-viem@1.3.1-alpha.1)(@tanstack/react-query@5.17.1)(@wagmi/core@2.0.1)(typescript@5.3.3)(viem@2.0.0)(wagmi@2.0.1)(zod@3.22.4):
+  /@songkeys/op-wagmi@0.2.3-alpha.2(@songkeys/op-viem@1.3.1-alpha.1)(@tanstack/react-query@5.17.1)(@wagmi/core@2.0.1)(typescript@5.3.3)(viem@2.0.0)(wagmi@2.0.1)(zod@3.22.4):
     resolution:
       {
-        integrity: sha512-q36vs3TUfRJKD3oXzPw9VkACm6rKOi+UHZv2Y5+zSb/5xXrEUazQPRJgzTAbfGpKjnANfvDAqcvXUk5/n+tKOw==,
+        integrity: sha512-TCLg/xX0lW9wPyPl/TRawmOyCH1WisuaSMz4hEC/w3nBIdXnAhBvO+Rfi19BVD4T9AqYX2MRVDtvTSB/RvfGOg==,
       }
     requiresBuild: true
     peerDependencies:
