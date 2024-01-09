@@ -25,17 +25,6 @@ export function useRSS3Approve() {
     hash: data,
   })
 
-  // on success
-  useEffect(() => {
-    if (waitForTransaction.isSuccess) {
-      showNotification({
-        color: "teal",
-        title: "Approve successful",
-        message: "Your $RSS3 tokens have been approved",
-      })
-    }
-  }, [waitForTransaction.isSuccess])
-
   return {
     write: (value: bigint) =>
       writeContract({

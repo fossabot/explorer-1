@@ -258,7 +258,7 @@ export default function BridgePage() {
               radius="lg"
               type="submit"
               onClick={() => rss3Approve.write(requestedAmount)}
-              loading={rss3Approve.isPending || rss3Allowance.isLoading}
+              loading={rss3Approve.isPending || rss3Allowance.isFetching}
             >
               Approve
             </Button>
