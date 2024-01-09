@@ -1,9 +1,7 @@
 import { useEffect } from "react"
-import { formatUnits, parseUnits } from "viem"
+import { parseUnits } from "viem"
 
 import { useEstimateDepositGas } from "@/hooks/useEstimateDepositGas"
-import { useRSS3Allowance } from "@/hooks/useRSS3Allowance"
-import { useRSS3Approve } from "@/hooks/useRSS3Approve"
 import { useRSS3Deposit } from "@/hooks/useRSS3Deposit"
 import { api } from "@/lib/trpc/client"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
@@ -83,7 +81,7 @@ export function BridgeDepositModal({
         </div>
         <div>
           <p>Time to transfer</p>
-          <p className="font-semibold">~10 minute</p>
+          <p className="font-semibold">~10 minutes</p>
         </div>
         <Button
           fullWidth

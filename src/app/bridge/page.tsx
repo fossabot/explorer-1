@@ -8,6 +8,7 @@ import { parseUnits } from "viem"
 import { BridgeApproveModal } from "@/components/bridge/approve-modal"
 import BridgeConfirmButton from "@/components/bridge/confirm-button"
 import { BridgeDepositModal } from "@/components/bridge/deposit-modal"
+import { BridgeWithdrawModal } from "@/components/bridge/withdraw-modal"
 import { useEstimateDepositGas } from "@/hooks/useEstimateDepositGas"
 import { useRSS3Allowance } from "@/hooks/useRSS3Allowance"
 import { useRSS3Balance } from "@/hooks/useRSS3Balance"
@@ -30,6 +31,7 @@ export default function BridgePage() {
     actionType === "Deposit"
       ? [IconEthereum, IconRss3Circle]
       : [IconRss3Circle, IconEthereum]
+  const time = actionType === "Deposit" ? "10 minutes" : "7 days"
 
   const fromBalance = useRSS3Balance(from.id)
   const toBalance = useRSS3Balance(to.id)
@@ -58,6 +60,10 @@ export default function BridgePage() {
     depositModalOpened,
     { open: depositModalOpen, close: depositModalClose },
   ] = useDisclosure(false)
+  const [
+    withdrawModalOpened,
+    { open: withdrawModalOpen, close: withdrawModalClose },
+  ] = useDisclosure(false)
 
   useEffect(() => {
     form.reset()
@@ -85,10 +91,14 @@ export default function BridgePage() {
   const onConfirm = useCallback(() => {
     const result = form.validate()
     if (!result.hasErrors) {
-      if (isExceededAllowance) {
-        approveModalOpen()
+      if (actionType === "Deposit") {
+        if (isExceededAllowance) {
+          approveModalOpen()
+        } else {
+          depositModalOpen()
+        }
       } else {
-        depositModalOpen()
+        withdrawModalOpen()
       }
     }
   }, [form, depositModalOpen, isExceededAllowance, approveModalOpen])
@@ -181,7 +191,7 @@ export default function BridgePage() {
           </div>
           <div className="flex justify-between">
             <div>Time to transfer</div>
-            <div className="font-semibold">~10 minute</div>
+            <div className="font-semibold">~ {time}</div>
           </div>
         </div>
         {actionType === "Deposit" ? (
@@ -203,7 +213,18 @@ export default function BridgePage() {
               }}
             />
           </>
-        ) : null}
+        ) : (
+          <BridgeWithdrawModal
+            opened={withdrawModalOpened}
+            close={withdrawModalClose}
+            amount={form.values.amount}
+            onSuccess={() => {
+              form.reset()
+              fromBalance.refetch?.()
+              toBalance.refetch?.()
+            }}
+          />
+        )}
       </Card>
     </div>
   )

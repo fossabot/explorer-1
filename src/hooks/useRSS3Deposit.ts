@@ -1,6 +1,6 @@
 import { useWriteDepositERC20 } from "op-wagmi"
 import { useEffect } from "react"
-import { zeroAddress, type WriteContractErrorType } from "viem"
+import { zeroAddress } from "viem"
 import { useAccount, useWaitForTransactionReceipt } from "wagmi"
 
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
@@ -11,7 +11,7 @@ export function useRSS3Deposit() {
   const { writeDepositERC20, data, isPending, isSuccess, reset } =
     useWriteDepositERC20({
       mutation: {
-        onError: (error: WriteContractErrorType) => {
+        onError: (error) => {
           showNotification({
             color: "red",
             title: "Deposit failed",
