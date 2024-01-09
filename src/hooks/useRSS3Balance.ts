@@ -34,6 +34,7 @@ export const useRSS3Balance = (chainId: number) => {
   if (!account.address) {
     return {
       formatted: "0",
+      isPending: true,
     }
   } else if (chainId === rss3Chain.id) {
     return rss3ChainBalance.data
@@ -44,9 +45,12 @@ export const useRSS3Balance = (chainId: number) => {
             rss3ChainBalance.data.value ?? 0n,
             rss3ChainBalance.data.decimals || rss3Tokens.decimals,
           ),
+          refetch: rss3ChainBalance.refetch,
+          isPending: rss3ChainBalance.isPending,
         }
       : {
           formatted: "0",
+          isPending: rss3ChainBalance.isPending,
         }
   } else if (chainId === mainnetChain.id) {
     return mainnetChainBalance.data
@@ -57,13 +61,17 @@ export const useRSS3Balance = (chainId: number) => {
             mainnetChainBalance.data?.[0] ?? 0n,
             mainnetChainBalance.data?.[1] || rss3Tokens.decimals,
           ),
+          refetch: mainnetChainBalance.refetch,
+          isPending: mainnetChainBalance.isPending,
         }
       : {
           formatted: "0",
+          isPending: mainnetChainBalance.isPending,
         }
   } else {
     return {
       formatted: "0",
+      isPending: false,
     }
   }
 }

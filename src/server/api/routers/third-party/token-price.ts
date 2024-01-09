@@ -5,7 +5,7 @@ import { querystring } from "../../fetchers/utils"
 
 export const tokenPriceApi = publicProcedure.query(async ({ input }) => {
   const result = await fetchCoinmarketCap(
-    "/v2/cryptocurrency/quotes/latest?" +
+    "v2/cryptocurrency/quotes/latest?" +
       querystring({
         slug: "rss3,ethereum",
       }),

@@ -16,6 +16,7 @@ const publicClient = createPublicClient({
 export function useEstimateDepositGas() {
   const account = useAccount()
   const [estimatedGas, setEstimatedGas] = useState("0")
+  const [isPending, setIsPending] = useState(true)
 
   useEffect(() => {
     if (account.address) {
@@ -35,11 +36,13 @@ export function useEstimateDepositGas() {
         chainId: mainnetChain.id,
       }).then((gas) => {
         setEstimatedGas(formatEther(gas))
+        setIsPending(false)
       })
     }
   }, [account.address])
 
   return {
     data: estimatedGas,
+    isPending,
   }
 }

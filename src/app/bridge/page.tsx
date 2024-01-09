@@ -122,6 +122,14 @@ export default function BridgePage() {
     }
   }, [rss3Approve.isSuccess])
 
+  useEffect(() => {
+    form.reset()
+    reviewModalClose()
+    rss3Deposit.reset()
+    fromBalance.refetch?.()
+    toBalance.refetch?.()
+  }, [rss3Deposit.isSuccess, fromBalance.refetch, toBalance.refetch])
+
   return (
     <div className="flex items-center justify-center pt-32">
       <Card className="w-[600px]" shadow="xs" radius="lg" withBorder>
@@ -162,7 +170,10 @@ export default function BridgePage() {
             />
           </form>
           <div className="flex items-center gap-1">
-            <span>Balance: {fromBalance.formatted} RSS3</span>
+            <span>
+              Balance: {fromBalance.isPending ? "-" : fromBalance.formatted}{" "}
+              RSS3
+            </span>
             <Button
               variant="subtle"
               className="text-primary-500 px-1 h-7"
@@ -183,8 +194,10 @@ export default function BridgePage() {
             <ToIcon className="w-5 h-5" />
             <span className="font-semibold">{to.name}</span>
           </div>
-          <div>You will receive: {form.values.amount} RSS3</div>
-          <div>Balance: {toBalance.formatted} RSS3</div>
+          <div>You will receive: {form.values.amount || 0} RSS3</div>
+          <div>
+            Balance: {toBalance.isPending ? "-" : toBalance.formatted} RSS3
+          </div>
         </Card>
         <BridgeButton
           action={actionType as "Deposit" | "Withdraw"}
@@ -195,12 +208,17 @@ export default function BridgePage() {
           <div className="flex justify-between">
             <div>Gas fee to transfer</div>
             <div className="font-semibold">
-              {estimatedDepositGas.data} {gasSymbol} (${gasWorth})
+              {estimatedDepositGas.isPending ? "-" : estimatedDepositGas.data}{" "}
+              {gasSymbol} ($
+              {estimatedDepositGas.isPending || tokenPrice.isPending
+                ? "-"
+                : gasWorth}
+              )
             </div>
           </div>
           <div className="flex justify-between">
             <div>Time to transfer</div>
-            <div className="font-semibold">~1 minute</div>
+            <div className="font-semibold">~10 minute</div>
           </div>
         </div>
         {actionType === "Deposit" && (
