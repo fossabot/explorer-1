@@ -7,20 +7,14 @@ import { parseUnits } from "viem"
 
 import { BridgeApproveModal } from "@/components/bridge/approve-modal"
 import BridgeConfirmButton from "@/components/bridge/confirm-button"
+import { BridgeDepositModal } from "@/components/bridge/deposit-modal"
 import { useEstimateDepositGas } from "@/hooks/useEstimateDepositGas"
 import { useRSS3Allowance } from "@/hooks/useRSS3Allowance"
 import { useRSS3Balance } from "@/hooks/useRSS3Balance"
-import { useRSS3Deposit } from "@/hooks/useRSS3Deposit"
 import { api } from "@/lib/trpc/client"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
 import { rss3Tokens } from "@/lib/wagmi/config/tokens"
-import {
-  Button,
-  Card,
-  Modal,
-  NumberInput,
-  SegmentedControl,
-} from "@mantine/core"
+import { Button, Card, NumberInput, SegmentedControl } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import { useDisclosure } from "@mantine/hooks"
 import { IconEthereum, IconRss3Circle } from "@rss3/web3-icons-react"
@@ -61,8 +55,8 @@ export default function BridgePage() {
   })
 
   const [
-    reviewModalOpened,
-    { open: reviewModalOpen, close: reviewModalClose },
+    depositModalOpened,
+    { open: depositModalOpen, close: depositModalClose },
   ] = useDisclosure(false)
 
   useEffect(() => {
@@ -74,9 +68,6 @@ export default function BridgePage() {
   const gasWorth = (
     parseFloat(estimatedDepositGas.data) * (tokenPrice.data?.[gasSymbol] || 0)
   ).toFixed(3)
-  const rss3Worth = (form.values.amount * (tokenPrice.data?.RSS3 || 0)).toFixed(
-    3,
-  )
 
   const requestedAmount = parseUnits(
     form.values.amount.toString(),
@@ -89,8 +80,6 @@ export default function BridgePage() {
     { open: approveModalOpen, close: approveModalClose },
   ] = useDisclosure(false)
 
-  const rss3Deposit = useRSS3Deposit()
-
   const isExceededAllowance = requestedAmount > (rss3Allowance.data || 0)
 
   const onConfirm = useCallback(() => {
@@ -99,22 +88,10 @@ export default function BridgePage() {
       if (isExceededAllowance) {
         approveModalOpen()
       } else {
-        reviewModalOpen()
+        depositModalOpen()
       }
     }
-  }, [form, reviewModalOpen, isExceededAllowance, approveModalOpen])
-
-  const handleDeposit = () => {
-    rss3Deposit.write(requestedAmount)
-  }
-
-  useEffect(() => {
-    form.reset()
-    reviewModalClose()
-    rss3Deposit.reset()
-    fromBalance.refetch?.()
-    toBalance.refetch?.()
-  }, [rss3Deposit.isSuccess, fromBalance.refetch, toBalance.refetch])
+  }, [form, depositModalOpen, isExceededAllowance, approveModalOpen])
 
   return (
     <div className="flex items-center justify-center pt-32">
@@ -134,7 +111,7 @@ export default function BridgePage() {
             <FromIcon className="w-5 h-5" />
             <span className="font-semibold">{from.name}</span>
           </div>
-          <form onSubmit={form.onSubmit(handleDeposit)}>
+          <form>
             <NumberInput
               size="xl"
               radius="lg"
@@ -207,65 +184,25 @@ export default function BridgePage() {
             <div className="font-semibold">~10 minute</div>
           </div>
         </div>
-        {actionType === "Deposit" && (
-          <BridgeApproveModal
-            opened={approveModalOpened}
-            close={approveModalClose}
-            amount={form.values.amount}
-            onSuccess={() => reviewModalOpen()}
-          />
-        )}
         {actionType === "Deposit" ? (
-          <Modal
-            opened={reviewModalOpened}
-            onClose={reviewModalClose}
-            title={<div className="font-bold text-xl">Review {actionType}</div>}
-            centered
-            size="md"
-            radius="lg"
-            padding="xl"
-          >
-            <form className="space-y-6" onSubmit={form.onSubmit(handleDeposit)}>
-              <div>
-                <div className="flex items-center text-lg">
-                  <div className="flex items-center gap-2">
-                    <FromIcon className="w-6 h-6" />
-                    <span className="font-semibold">{from.name}</span>
-                  </div>
-                  <i className="i-mingcute-arrow-right-fill text-primary-500 mx-6" />
-                  <div className="flex items-center gap-2">
-                    <ToIcon className="w-6 h-6" />
-                    <span className="font-semibold">{to.name}</span>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <p>Amount to deposit</p>
-                <p className="font-semibold">
-                  {form.values.amount} RSS3 (${rss3Worth})
-                </p>
-              </div>
-              <div>
-                <p>Gas fee to transfer</p>
-                <p className="font-semibold">
-                  {estimatedDepositGas.data} {gasSymbol} (${gasWorth})
-                </p>
-              </div>
-              <div>
-                <p>Time to transfer</p>
-                <p className="font-semibold">~1 minute</p>
-              </div>
-              <Button
-                fullWidth
-                size="lg"
-                radius="lg"
-                type="submit"
-                loading={rss3Deposit.isPending}
-              >
-                {actionType}
-              </Button>
-            </form>
-          </Modal>
+          <>
+            <BridgeApproveModal
+              opened={approveModalOpened}
+              close={approveModalClose}
+              amount={form.values.amount}
+              onSuccess={() => depositModalOpen()}
+            />
+            <BridgeDepositModal
+              opened={depositModalOpened}
+              close={depositModalClose}
+              amount={form.values.amount}
+              onSuccess={() => {
+                form.reset()
+                fromBalance.refetch?.()
+                toBalance.refetch?.()
+              }}
+            />
+          </>
         ) : null}
       </Card>
     </div>
