@@ -123,8 +123,16 @@ export type Node = {
    **/
   taxFraction: number
   isPublicGood: boolean
-  /** @example "https://node.rss3.dev/kafka" */
-  streamURI: string
+
+  stream: {
+    enable: boolean
+    /** @example "kafka" */
+    driver: string
+    /** @example "rss3.node.feeds" */
+    topic: string
+    /** @example "https://node.google.com:9092" */
+    uri: string
+  }
 }
 
 export type NodeListResponse = ListResponse<Node>
