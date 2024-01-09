@@ -1,5 +1,4 @@
 import { publicL2OpStackActions } from "op-viem"
-import { estimateL1Fee } from "op-viem/actions"
 import { useEffect, useState } from "react"
 import { createPublicClient, formatEther, http } from "viem"
 import { useAccount } from "wagmi"
@@ -20,24 +19,28 @@ export function useEstimateDepositGas() {
 
   useEffect(() => {
     if (account.address) {
-      estimateL1Fee(publicClient, {
-        abi: abis[
-          rss3Chain.contracts.l1StandardBridge[rss3Chain.sourceId].address
-        ],
-        functionName: "depositERC20To",
-        args: [
-          rss3Tokens[mainnetChain.id].address,
-          rss3Tokens[rss3Chain.id].address,
-          account.address,
-          1,
-          1,
-          "0x",
-        ],
-        chainId: mainnetChain.id,
-      }).then((gas) => {
-        setEstimatedGas(formatEther(gas))
-        setIsPending(false)
-      })
+      publicClient
+        .estimateContractGas({
+          address:
+            rss3Chain.contracts.l1StandardBridge[rss3Chain.sourceId].address,
+          abi: abis[
+            rss3Chain.contracts.l1StandardBridge[rss3Chain.sourceId].address
+          ],
+          functionName: "depositERC20To",
+          args: [
+            rss3Tokens[mainnetChain.id].address,
+            rss3Tokens[rss3Chain.id].address,
+            account.address,
+            1,
+            1,
+            "0x",
+          ],
+          account: account.address,
+        })
+        .then((gas) => {
+          setEstimatedGas(formatEther(gas))
+          setIsPending(false)
+        })
     }
   }, [account.address])
 
