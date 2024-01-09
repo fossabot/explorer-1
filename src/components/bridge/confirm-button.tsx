@@ -6,7 +6,7 @@ import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
 import { Button } from "@mantine/core"
 import { ConnectButton as _ConnectButton } from "@rainbow-me/rainbowkit"
 
-export default function BridgeWithdrawButton({
+export default function BridgeConfirmButton({
   action,
   hasValue,
   onConfirm,
