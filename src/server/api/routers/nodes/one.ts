@@ -8,11 +8,11 @@ import { NodeItemResponse } from "../../types"
 export const oneApi = publicProcedure
   .input(
     z.object({
-      id: z.string(),
+      address: z.string(),
     }),
   )
   .query(async ({ input }) => {
-    const result = await fetchGi(`/nodes/${input.id}`, {
+    const result = await fetchGi(`/nodes/${input.address}`, {
       method: "GET",
     }).then((res) => {
       return res.json() as Promise<NodeItemResponse>

@@ -23,7 +23,7 @@ export function fetchEi(url: string, init?: RequestInit) {
 }
 
 export function fetchGi(url: string, init?: RequestInit) {
-  return baseFetch("https://gi.rss3.io/" + url, init)
+  return baseFetch("https://gi.rss3.dve/" + url, init)
 }
 
 export function fetchCoinmarketCap(url: string, init?: RequestInit) {
