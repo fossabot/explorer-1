@@ -1,19 +1,19 @@
-import { useWriteDepositERC20 } from "op-wagmi"
+import { useWriteWithdrawERC20 } from "op-wagmi"
 import { useEffect } from "react"
 import { useAccount, useWaitForTransactionReceipt } from "wagmi"
 
-import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
+import { rss3Chain } from "@/lib/wagmi/config/chains"
 import { rss3Tokens } from "@/lib/wagmi/config/tokens"
 import { showNotification } from "@mantine/notifications"
 
-export function useRSS3Deposit() {
-  const { writeDepositERC20, data, isPending, isSuccess, reset } =
-    useWriteDepositERC20({
+export function useRSS3InitiateWithdrawal() {
+  const { writeWithdrawERC20, data, isPending, isSuccess, reset } =
+    useWriteWithdrawERC20({
       mutation: {
         onError: (error) => {
           showNotification({
             color: "red",
-            title: "Deposit failed",
+            title: "Initiate withdrawal failed",
             message: error.message,
           })
         },
@@ -31,8 +31,8 @@ export function useRSS3Deposit() {
     if (waitForTransaction.isSuccess) {
       showNotification({
         color: "teal",
-        title: "Deposit successful",
-        message: "Your $RSS3 tokens have been deposited",
+        title: "Initiate withdrawal successful",
+        message: "Your $RSS3 tokens withdrawal have been initiated",
       })
     }
   }, [waitForTransaction.isSuccess])
@@ -40,20 +40,18 @@ export function useRSS3Deposit() {
   return {
     write: (value: bigint) => {
       if (account.address) {
-        writeDepositERC20({
+        writeWithdrawERC20({
           args: {
-            l1Token: rss3Tokens[mainnetChain.id].address,
             l2Token: rss3Tokens[rss3Chain.id].address,
             to: account.address,
             amount: value,
-            minGasLimit: 200000,
           },
-          l2ChainId: rss3Chain.id,
+          chainId: rss3Chain.id,
         })
       } else {
         showNotification({
           color: "red",
-          title: "Deposit failed",
+          title: "Initiate withdrawal failed",
           message: "Please connect your wallet first",
         })
       }

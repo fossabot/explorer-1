@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { parseUnits } from "viem"
 
-import { useEstimateDepositGas } from "@/hooks/useEstimateDepositGas"
 import { useRSS3Deposit } from "@/hooks/useRSS3Deposit"
 import { api } from "@/lib/trpc/client"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
@@ -20,17 +19,12 @@ export function BridgeWithdrawModal({
   amount: number
   onSuccess: () => void
 }) {
-  const gasSymbol = mainnetChain.nativeCurrency.symbol
   const tokenPrice = api.thirdParty.tokenPrice.useQuery()
 
   const rss3Deposit = useRSS3Deposit()
 
   const requestedAmount = parseUnits(amount.toString(), rss3Tokens.decimals)
 
-  const estimatedDepositGas = useEstimateDepositGas()
-  const gasWorth = (
-    parseFloat(estimatedDepositGas.data) * (tokenPrice.data?.[gasSymbol] || 0)
-  ).toFixed(3)
   const rss3Worth = (amount * (tokenPrice.data?.RSS3 || 0)).toFixed(3)
 
   const [active, setActive] = useState(0)

@@ -1,4 +1,4 @@
-import { erc20Abi, zeroAddress } from "viem"
+import { erc20Abi } from "viem"
 import { useAccount, useReadContract } from "wagmi"
 
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
@@ -11,7 +11,7 @@ export function useRSS3Allowance() {
     abi: erc20Abi,
     functionName: "allowance",
     args: [
-      account.address || zeroAddress,
+      account.address || "0x",
       rss3Chain.contracts.l1StandardBridge[rss3Chain.sourceId].address,
     ],
   })

@@ -1,4 +1,4 @@
-import { erc20Abi, formatUnits, zeroAddress } from "viem"
+import { erc20Abi, formatUnits } from "viem"
 import { useAccount, useBalance, useReadContracts } from "wagmi"
 
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
@@ -19,7 +19,7 @@ export const useRSS3Balance = (chainId: number) => {
         address: rss3Tokens[mainnetChain.id].address,
         abi: erc20Abi,
         functionName: "balanceOf",
-        args: [account.address || zeroAddress],
+        args: [account.address || "0x"],
         chainId: mainnetChain.id,
       },
       {
