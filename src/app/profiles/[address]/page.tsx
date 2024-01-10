@@ -4,7 +4,9 @@ import Link from "next/link"
 import React from "react"
 import type { Address } from "viem"
 
+import { Tokens } from "@/app/profiles/[address]/tokens"
 import { useRSS3AccountInfo } from "@/hooks/useRSS3AccountInfo"
+import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
 import { ActionIcon, Card, CopyButton, Title, Tooltip } from "@mantine/core"
 
 export type ProfilesPageProps = { params: { address: Address } }
@@ -97,25 +99,19 @@ export default function ProfilesPage({ params }: ProfilesPageProps) {
         <Title size="h2">Token Information</Title>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <div className="aspect-video bg-gray-300 col-span-1 space-y-4 p-4 rounded-md">
-            <Title size="h3">On Ethereum</Title>
-            <div>
-              <p>100 $RSS3</p>
-              <p>2 $RSS3 Node X Chip</p>
-              <p>5 $RSS3 Node Y Chip</p>
-              <p>...</p>
-            </div>
-          </div>
+          <Tokens
+            chain={mainnetChain}
+            address={address}
+            title="On Ethereum"
+            className="col-span-1"
+          />
 
-          <div className="aspect-video bg-gray-300 col-span-1 space-y-4 p-4 rounded-md">
-            <Title size="h3">On RSS3 Chain</Title>
-            <div>
-              <p>100 $RSS3</p>
-              <p>2 $RSS3 Node X Chip</p>
-              <p>5 $RSS3 Node Y Chip</p>
-              <p>...</p>
-            </div>
-          </div>
+          <Tokens
+            chain={rss3Chain}
+            address={address}
+            title="On RSS3 Chain"
+            className="col-span-1"
+          />
         </div>
       </Card>
 
