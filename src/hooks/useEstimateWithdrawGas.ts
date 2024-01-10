@@ -1,4 +1,5 @@
 import { publicL2OpStackActions } from "op-viem"
+import { estimateFees } from "op-viem/actions"
 import { useEffect, useState } from "react"
 import { createPublicClient, formatEther, http } from "viem"
 import { useAccount } from "wagmi"
@@ -12,35 +13,30 @@ const publicClient = createPublicClient({
   transport: http(),
 }).extend(publicL2OpStackActions)
 
-export function useEstimateDepositGas() {
+export function useEstimateWithdrawGas() {
   const account = useAccount()
   const [estimatedGas, setEstimatedGas] = useState("0")
   const [isPending, setIsPending] = useState(true)
 
   useEffect(() => {
     if (account.address) {
-      publicClient
-        .estimateContractGas({
-          address:
-            rss3Chain.contracts.l1StandardBridge[rss3Chain.sourceId].address,
-          abi: abis[
-            rss3Chain.contracts.l1StandardBridge[rss3Chain.sourceId].address
-          ],
-          functionName: "depositERC20To",
-          args: [
-            rss3Tokens[mainnetChain.id].address,
-            rss3Tokens[rss3Chain.id].address,
-            account.address,
-            0,
-            200000,
-            "0x",
-          ],
-          account: account.address,
-        })
-        .then((gas) => {
-          setEstimatedGas(formatEther(gas))
-          setIsPending(false)
-        })
+      estimateFees(publicClient, {
+        abi: abis[rss3Chain.contracts.l2StandardBridge.address],
+        functionName: "withdrawTo",
+        args: [
+          rss3Tokens[rss3Chain.id].address,
+          account.address,
+          0,
+          200000,
+          "0x",
+        ],
+        chainId: mainnetChain.id,
+        account: account.address,
+        to: rss3Chain.contracts.l2StandardBridge.address,
+      }).then((gas) => {
+        setEstimatedGas(formatEther(gas))
+        setIsPending(false)
+      })
     }
   }, [account.address])
 

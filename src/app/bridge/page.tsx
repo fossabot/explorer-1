@@ -10,6 +10,7 @@ import BridgeConfirmButton from "@/components/bridge/confirm-button"
 import { BridgeDepositModal } from "@/components/bridge/deposit-modal"
 import { BridgeWithdrawModal } from "@/components/bridge/withdraw-modal"
 import { useEstimateDepositGas } from "@/hooks/useEstimateDepositGas"
+import { useEstimateWithdrawGas } from "@/hooks/useEstimateWithdrawGas"
 import { useRSS3Allowance } from "@/hooks/useRSS3Allowance"
 import { useRSS3Balance } from "@/hooks/useRSS3Balance"
 import { api } from "@/lib/trpc/client"
@@ -70,9 +71,13 @@ export default function BridgePage() {
   }, [actionType])
 
   const estimatedDepositGas = useEstimateDepositGas()
+  const estimatedWithdrawGas = useEstimateWithdrawGas()
+  const estimatedGas =
+    actionType === "Deposit" ? estimatedDepositGas : estimatedWithdrawGas
+
   const tokenPrice = api.thirdParty.tokenPrice.useQuery()
   const gasWorth = (
-    parseFloat(estimatedDepositGas.data) * (tokenPrice.data?.[gasSymbol] || 0)
+    parseFloat(estimatedGas.data) * (tokenPrice.data?.[gasSymbol] || 0)
   ).toFixed(3)
 
   const requestedAmount = parseUnits(
@@ -181,12 +186,8 @@ export default function BridgePage() {
           <div className="flex justify-between">
             <div>Gas fee to transfer</div>
             <div className="font-semibold">
-              {estimatedDepositGas.isPending ? "-" : estimatedDepositGas.data}{" "}
-              {gasSymbol} ($
-              {estimatedDepositGas.isPending || tokenPrice.isPending
-                ? "-"
-                : gasWorth}
-              )
+              {estimatedGas.isPending ? "-" : estimatedGas.data} {gasSymbol} ($
+              {estimatedGas.isPending || tokenPrice.isPending ? "-" : gasWorth})
             </div>
           </div>
           <div className="flex justify-between">

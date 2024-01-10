@@ -46,6 +46,7 @@ export function useRSS3Deposit() {
           l2Token: rss3Tokens[rss3Chain.id].address,
           to: account.address || zeroAddress,
           amount: value,
+          minGasLimit: 200000,
         },
         l2ChainId: rss3Chain.id,
       }),
