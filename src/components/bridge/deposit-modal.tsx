@@ -47,7 +47,7 @@ export function BridgeDepositModal({
     <Modal
       opened={opened}
       onClose={close}
-      title={<div className="font-bold text-xl">Review Deposit</div>}
+      title={<div className="font-bold text-xl">👀 Review Deposit</div>}
       centered
       size="md"
       radius="lg"
@@ -68,19 +68,27 @@ export function BridgeDepositModal({
           </div>
         </div>
         <div>
-          <p>Amount to deposit</p>
+          <p className="flex items-center gap-1">
+            <i className="i-mingcute-coin-2-line" />
+            Amount to deposit
+          </p>
           <p className="font-semibold">
             {amount} RSS3 (${rss3Worth})
           </p>
         </div>
         <div>
-          <p>Gas fee to transfer</p>
+          <p className="flex items-center gap-1">
+            <i className="i-mingcute-gas-station-line" />
+            Gas fee to transfer
+          </p>
           <p className="font-semibold">
             {estimatedDepositGas.data} {gasSymbol} (${gasWorth})
           </p>
         </div>
         <div>
-          <p>Time to transfer</p>
+          <p className="flex items-center gap-1">
+            <i className="i-mingcute-stopwatch-line" /> Time to transfer
+          </p>
           <p className="font-semibold">~10 minutes</p>
         </div>
         <Button

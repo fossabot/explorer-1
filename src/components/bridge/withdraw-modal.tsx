@@ -87,7 +87,7 @@ export function BridgeWithdrawModal({
     <Modal
       opened={opened}
       onClose={close}
-      title={<div className="font-bold text-xl">Review Withdraw</div>}
+      title={<div className="font-bold text-xl">👀 Review Withdraw</div>}
       centered
       size="lg"
       radius="lg"
@@ -108,7 +108,10 @@ export function BridgeWithdrawModal({
           </div>
         </div>
         <div>
-          <p>Amount to withdraw</p>
+          <p className="flex items-center gap-1">
+            <i className="i-mingcute-coin-2-line" />
+            Amount to deposit
+          </p>
           <p className="font-semibold">
             {amount} RSS3 (${rss3Worth})
           </p>
