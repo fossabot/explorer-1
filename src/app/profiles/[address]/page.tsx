@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import React from "react"
 import type { Address } from "viem"
 
 import { useRSS3AccountInfo } from "@/hooks/useRSS3AccountInfo"
@@ -21,7 +22,7 @@ export default function ProfilesPage({ params }: ProfilesPageProps) {
 
         <div className="font-mono text-lg flex items-center gap-2">
           <span className="flex-shrink truncate">{address}</span>
-          <CopyButton value="https://mantine.dev" timeout={2000}>
+          <CopyButton value={address} timeout={2000}>
             {({ copied, copy }) => (
               <Tooltip
                 label={copied ? "Copied" : "Copy Address"}
