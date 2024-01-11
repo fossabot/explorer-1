@@ -82,12 +82,11 @@ export function ShellHeader({ navbarOpened, toggleNavbar }: ShellHeaderProps) {
                 ))}
               </MotionConfig>
             </Group>
-            <ConnectButton />
           </Group>
 
           <Group>
             <ColorSchemeSwitch />
-
+            <ConnectButton />
             <Burger
               opened={navbarOpened}
               onClick={toggleNavbar}

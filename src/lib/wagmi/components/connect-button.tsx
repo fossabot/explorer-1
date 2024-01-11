@@ -54,7 +54,7 @@ export default function ConnectButton() {
 
               return (
                 <div style={{ display: "flex", gap: 12 }}>
-                  <Button
+                  {/* <Button
                     size="compact-sm"
                     onClick={openChainModal}
                     style={{ display: "flex", alignItems: "center" }}
@@ -80,9 +80,9 @@ export default function ConnectButton() {
                       </div>
                     )}
                     {chain.name}
-                  </Button>
+                  </Button> */}
 
-                  <Button size="compact-sm" onClick={openAccountModal}>
+                  <Button size="compact-md" onClick={openAccountModal}>
                     {account.displayName}
                     {/* {account.displayBalance
                       ? ` (${account.displayBalance})`
