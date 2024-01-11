@@ -29,7 +29,7 @@ export function fetchEi(url: string, init?: RequestInit) {
 
 export function fetchGi(url: string, init?: RequestInit) {
   url = ensureStartSlash(url)
-  return baseFetch("https://gi.rss3.dve" + url, init)
+  return baseFetch("https://gi.rss3.dev" + url, init)
 }
 
 export function fetchCoinmarketCap(url: string, init?: RequestInit) {
