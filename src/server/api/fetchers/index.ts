@@ -18,16 +18,23 @@ async function baseFetch(url: string, init?: RequestInit) {
   }
 }
 
+function ensureStartSlash(url: string) {
+  return url.startsWith("/") ? url : "/" + url
+}
+
 export function fetchEi(url: string, init?: RequestInit) {
-  return baseFetch("https://gi.rss3.dev/" + url, init)
+  url = ensureStartSlash(url)
+  return baseFetch("https://gi.rss3.dev" + url, init)
 }
 
 export function fetchGi(url: string, init?: RequestInit) {
-  return baseFetch("https://gi.rss3.dve/" + url, init)
+  url = ensureStartSlash(url)
+  return baseFetch("https://gi.rss3.dve" + url, init)
 }
 
 export function fetchCoinmarketCap(url: string, init?: RequestInit) {
-  return baseFetch("https://pro-api.coinmarketcap.com/" + url, {
+  url = ensureStartSlash(url)
+  return baseFetch("https://pro-api.coinmarketcap.com" + url, {
     ...init,
     headers: {
       "X-CMC_PRO_API_KEY": env.COINMARKETCAP_API_KEY,
