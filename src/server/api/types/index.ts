@@ -1,6 +1,6 @@
 import { type Address } from "viem"
 
-/** Response */
+/* Response */
 
 export type ListResponse<T extends unknown> = {
   data: T[]
@@ -11,7 +11,7 @@ export type ItemResponse<T extends unknown> = {
   data: T
 }
 
-/** Commons */
+/* Commons */
 
 type Block = {
   hash: Address
@@ -33,7 +33,7 @@ type Transaction = {
   status: "success" | "failure"
 }
 
-/** Staking */
+/* Staking */
 
 export type StakeEvent = {
   /**
@@ -68,7 +68,7 @@ export type Staking = {
 export type StakingListResponse = ListResponse<Staking>
 export type StakingItemResponse = ItemResponse<Staking>
 
-/** Bridging */
+/* Bridging */
 
 export type BridgeEvent = {
   token: {
@@ -124,15 +124,64 @@ export type Node = {
   taxFraction: number
   isPublicGood: boolean
 
-  stream: {
-    enable: boolean
-    /** @example "kafka" */
-    driver: string
-    /** @example "rss3.node.feeds" */
-    topic: string
-    /** @example "https://node.google.com:9092" */
-    uri: string
-  }
+  /**
+   * In wei.
+   *
+   * To display:
+   *
+   * ```ts
+   * import { formatEther } from 'viem'
+   *
+   * formatEther(BigInt(value)) // "1"
+   * ```
+   *
+   * @example "1000000000000000000"
+   */
+  operatingPoolTokens: string
+
+  /**
+   * In wei.
+   *
+   * To display:
+   *
+   * ```ts
+   * import { formatEther } from 'viem'
+   *
+   * formatEther(BigInt(value)) // "1"
+   * ```
+   *
+   * @example "1000000000000000000"
+   */
+  stakingPoolTokens: string
+
+  /**
+   * This is an internal variable used to allocate staking rewards for users who staked.
+   *
+   * It does not need to be displayed on the front end.
+   *
+   * There is a ratio between the number of shares and the number of chips,
+   * where every `500*10**18` shares corresponds to `1` chip NFT.
+   * That is, for each chip the user receives, the contract will simultaneously increase
+   * the user's shares by 500 ether units.
+   *
+   * @example "1000000000000000000"
+   */
+  totalShares: string
+
+  /**
+   * In wei.
+   *
+   * To display:
+   *
+   * ```ts
+   * import { formatEther } from 'viem'
+   *
+   * formatEther(BigInt(value)) // "1"
+   * ```
+   *
+   * @example "1000000000000000000"
+   */
+  slashedTokens: string
 }
 
 export type NodeListResponse = ListResponse<Node>
