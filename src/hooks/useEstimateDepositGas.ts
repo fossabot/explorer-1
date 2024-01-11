@@ -1,16 +1,11 @@
-import { publicL2OpStackActions } from "op-viem"
 import { useEffect, useState } from "react"
-import { createPublicClient, formatEther, http } from "viem"
+import { formatEther } from "viem"
 import { useAccount } from "wagmi"
 
 import { abis } from "@/lib/wagmi/config/abis"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
 import { rss3Tokens } from "@/lib/wagmi/config/tokens"
-
-const publicClient = createPublicClient({
-  chain: rss3Chain,
-  transport: http(),
-}).extend(publicL2OpStackActions)
+import { mainnetChainPublicClient } from "@/lib/wagmi/public-client"
 
 export function useEstimateDepositGas() {
   const account = useAccount()
@@ -19,8 +14,8 @@ export function useEstimateDepositGas() {
 
   useEffect(() => {
     if (account.address) {
-      publicClient
-        .estimateContractGas({
+      ;(async () => {
+        const gas = await mainnetChainPublicClient.estimateContractGas({
           address:
             rss3Chain.contracts.l1StandardBridge[rss3Chain.sourceId].address,
           abi: abis[
@@ -37,10 +32,12 @@ export function useEstimateDepositGas() {
           ],
           account: account.address,
         })
-        .then((gas) => {
-          setEstimatedGas(formatEther(gas))
-          setIsPending(false)
-        })
+        const feePerGas = await mainnetChainPublicClient.estimateFeesPerGas()
+        if (feePerGas.maxFeePerGas) {
+          setEstimatedGas(formatEther(gas * feePerGas.maxFeePerGas))
+        }
+        setIsPending(false)
+      })()
     }
   }, [account.address])
 

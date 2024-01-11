@@ -1,5 +1,6 @@
 import { useWriteFinalizeWithdrawalTransaction } from "op-wagmi"
 import { useEffect } from "react"
+import { type Address } from "viem"
 import { useWaitForTransactionReceipt } from "wagmi"
 
 import { rss3Chain } from "@/lib/wagmi/config/chains"
@@ -40,7 +41,7 @@ export function useRSS3FinalizeWithdrawal() {
   }, [waitForTransaction.isSuccess])
 
   return {
-    write: (withdrawalTxHash: `0x${string}`) =>
+    write: (withdrawalTxHash: Address) =>
       writeFinalizeWithdrawalTransaction({
         args: {
           withdrawalTxHash: withdrawalTxHash,

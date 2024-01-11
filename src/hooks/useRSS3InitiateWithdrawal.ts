@@ -59,5 +59,6 @@ export function useRSS3InitiateWithdrawal() {
     isPending: isPending || (data && waitForTransaction.isPending),
     isSuccess: isSuccess && data && waitForTransaction.isSuccess,
     reset,
+    data,
   }
 }

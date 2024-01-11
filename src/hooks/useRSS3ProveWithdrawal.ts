@@ -1,11 +1,12 @@
 import { useWriteProveWithdrawalTransaction } from "op-wagmi"
 import { useEffect } from "react"
+import { type Address } from "viem"
 import { useWaitForTransactionReceipt } from "wagmi"
 
 import { rss3Chain } from "@/lib/wagmi/config/chains"
 import { showNotification } from "@mantine/notifications"
 
-export function useRSSProveWithdrawal() {
+export function useRSS3ProveWithdrawal() {
   const { writeProveWithdrawalTransaction, data, isPending, isSuccess, reset } =
     useWriteProveWithdrawalTransaction({
       mutation: {
@@ -35,7 +36,7 @@ export function useRSSProveWithdrawal() {
   }, [waitForTransaction.isSuccess])
 
   return {
-    write: (withdrawalTxHash: `0x${string}`) =>
+    write: (withdrawalTxHash: Address) =>
       writeProveWithdrawalTransaction({
         args: {
           withdrawalTxHash: withdrawalTxHash,
@@ -45,5 +46,6 @@ export function useRSSProveWithdrawal() {
     isPending: isPending || (data && waitForTransaction.isPending),
     isSuccess: isSuccess && data && waitForTransaction.isSuccess,
     reset,
+    data,
   }
 }

@@ -1,17 +1,12 @@
-import { publicL2OpStackActions } from "op-viem"
 import { estimateFees } from "op-viem/actions"
 import { useEffect, useState } from "react"
-import { createPublicClient, formatEther, http } from "viem"
+import { formatEther } from "viem"
 import { useAccount } from "wagmi"
 
 import { abis } from "@/lib/wagmi/config/abis"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
 import { rss3Tokens } from "@/lib/wagmi/config/tokens"
-
-const publicClient = createPublicClient({
-  chain: rss3Chain,
-  transport: http(),
-}).extend(publicL2OpStackActions)
+import { rss3ChainPublicClient } from "@/lib/wagmi/public-client"
 
 export function useEstimateWithdrawGas() {
   const account = useAccount()
@@ -20,7 +15,7 @@ export function useEstimateWithdrawGas() {
 
   useEffect(() => {
     if (account.address) {
-      estimateFees(publicClient, {
+      estimateFees(rss3ChainPublicClient, {
         abi: abis[rss3Chain.contracts.l2StandardBridge.address],
         functionName: "withdrawTo",
         args: [
