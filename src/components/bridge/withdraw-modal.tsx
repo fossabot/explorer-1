@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react"
-import { parseUnits } from "viem"
+import { parseUnits, type Address } from "viem"
 
-import { useRSS3Deposit } from "@/hooks/useRSS3Deposit"
+import { useFinalizeWithdrawal } from "@/hooks/use3FinalizeWithdrawal"
+import { useInitiateWithdrawal } from "@/hooks/useInitiateWithdrawal"
+import { useMinutesToFinalizable } from "@/hooks/useMinutesToFinalizable"
+import { useMinutesToProve } from "@/hooks/useMinutesToProve"
+import { useProveWithdrawal } from "@/hooks/useProveWithdrawal"
 import { api } from "@/lib/trpc/client"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
 import { rss3Tokens } from "@/lib/wagmi/config/tokens"
 import { Button, Modal, Stepper } from "@mantine/core"
+import { showNotification } from "@mantine/notifications"
 import { IconEthereum, IconRss3Circle } from "@rss3/web3-icons-react"
 
 export function BridgeWithdrawModal({
@@ -13,30 +18,73 @@ export function BridgeWithdrawModal({
   close,
   amount,
   onSuccess,
+  initiationTxHash,
+  initiationBlockNumber,
+  proofTxHash,
 }: {
   opened: boolean
   close: () => void
   amount: number
   onSuccess: () => void
+  initiationTxHash?: Address
+  initiationBlockNumber?: bigint
+  proofTxHash?: Address
 }) {
   const tokenPrice = api.thirdParty.tokenPrice.useQuery()
 
-  const rss3Deposit = useRSS3Deposit()
+  const initiateWithdrawal = useInitiateWithdrawal()
+  const proveWithdrawal = useProveWithdrawal()
+  const finalizeWithdrawal = useFinalizeWithdrawal()
 
   const requestedAmount = parseUnits(amount.toString(), rss3Tokens.decimals)
+  const [_initiationTxHash, _setInitiationTxHash] = useState(initiationTxHash)
+  const [_initiationBlockNumber, _setInitiationBlockNumber] = useState(
+    initiationBlockNumber,
+  )
+  const [_proofTxHash, _setProofTxHash] = useState(proofTxHash)
+
+  const minutesToProve = useMinutesToProve(_initiationBlockNumber)
+  const minutesToFinalizable = useMinutesToFinalizable(_proofTxHash)
+
+  useEffect(() => {
+    if (initiateWithdrawal.data) {
+      _setInitiationTxHash(initiateWithdrawal.data)
+      initiateWithdrawal.reset()
+    }
+  }, [initiateWithdrawal.isSuccess])
+
+  useEffect(() => {
+    if (proveWithdrawal.data) {
+      _setProofTxHash(proveWithdrawal.data)
+      proveWithdrawal.reset()
+    }
+  }, [proveWithdrawal.isSuccess])
 
   const rss3Worth = (amount * (tokenPrice.data?.RSS3 || 0)).toFixed(3)
 
-  const [active, setActive] = useState(0)
+  let defaultActive
+  if (!_initiationTxHash) {
+    defaultActive = 0
+  } else if (!_proofTxHash) {
+    defaultActive = 2
+  } else {
+    defaultActive = 4
+  }
+  const [active, setActive] = useState(defaultActive)
 
   const actions = [
     {
       text: "Initiate withdrawal",
       step: 1,
       description: "Initiate withdrawal request on RSS3 Chain Mainnet",
+      hook: initiateWithdrawal,
     },
     {
-      text: "Wait 30 minutes",
+      text: `Wait 30 minutes ${
+        minutesToProve.data && active === 1
+          ? `(${minutesToProve.data} minutes left)`
+          : ""
+      }`,
       description:
         "Wait for withdrawal request to be uploaded to the Ethereum Mainnet",
     },
@@ -44,15 +92,21 @@ export function BridgeWithdrawModal({
       text: "Prove withdrawal",
       step: 2,
       description: "Prove withdrawal on Ethereum Mainnet",
+      hook: proveWithdrawal,
     },
     {
-      text: "Wait 7 days",
+      text: `Wait 7 days ${
+        minutesToFinalizable.data && active === 3
+          ? `(${minutesToFinalizable.data} minutes left)`
+          : ""
+      }`,
       description: "Wait for the seven day finalization window",
     },
     {
       text: "Claim withdrawal",
       step: 3,
       description: "The funds will be realized on the Ethereum Mainnet",
+      hook: finalizeWithdrawal,
     },
   ]
 
@@ -66,16 +120,36 @@ export function BridgeWithdrawModal({
   }
 
   const handleClick = () => {
-    rss3Deposit.write(requestedAmount)
+    switch (active) {
+      case 0:
+        initiateWithdrawal.write(requestedAmount)
+        break
+      case 2:
+        if (_initiationTxHash) {
+          proveWithdrawal.write(_initiationTxHash)
+        } else {
+          showNotification({
+            color: "red",
+            title: "Prove withdrawal failed",
+            message: "",
+          })
+        }
+        break
+      case 4:
+        if (_proofTxHash) {
+          finalizeWithdrawal.write(_proofTxHash)
+        }
+        break
+    }
   }
 
   useEffect(() => {
-    if (rss3Deposit.isSuccess) {
+    if (finalizeWithdrawal.isSuccess) {
       close()
       onSuccess()
-      rss3Deposit.reset()
+      finalizeWithdrawal.reset()
     }
-  }, [rss3Deposit.isSuccess])
+  }, [finalizeWithdrawal.isSuccess])
 
   return (
     <Modal
@@ -139,7 +213,7 @@ export function BridgeWithdrawModal({
           fullWidth
           size="lg"
           radius="lg"
-          loading={rss3Deposit.isPending}
+          loading={actions[active].hook?.isPending}
           onClick={handleClick}
           disabled={!actions[active].step}
         >
