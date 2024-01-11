@@ -120,7 +120,7 @@ export default function BridgePage() {
           data={["Deposit", "Withdraw"]}
           className="mb-8"
         />
-        <Card radius="lg" className="bg-zinc-100 space-y-4">
+        <Card radius="lg" className="bg-zinc-100 dark:bg-zinc-800 space-y-4">
           <div className="flex items-center gap-2">
             <span>From</span>
             <FromIcon className="w-5 h-5" />
@@ -131,7 +131,7 @@ export default function BridgePage() {
               size="xl"
               radius="lg"
               rightSection={
-                <div className="flex items-center gap-2 text-zinc-700">
+                <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-200">
                   <IconRss3Circle className="w-10 h-10" />
                   RSS3
                 </div>
@@ -166,7 +166,7 @@ export default function BridgePage() {
         <div className="w-full flex justify-center my-4 text-primary-500 text-2xl">
           <i className="i-mingcute-arrow-down-fill" />
         </div>
-        <Card radius="lg" className="bg-zinc-100 space-y-4">
+        <Card radius="lg" className="bg-zinc-100 dark:bg-zinc-800 space-y-4">
           <div className="flex items-center gap-2">
             <span>To</span>
             <ToIcon className="w-5 h-5" />

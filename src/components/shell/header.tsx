@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils"
 import ConnectButton from "@/lib/wagmi/components/connect-button"
 import { AppShell, Burger, Group } from "@mantine/core"
 
+import { ColorSchemeSwitch } from "../color-schema-switch"
+
 export const headerItems = [
   {
     name: "Home",
@@ -49,7 +51,7 @@ export function ShellHeader({ navbarOpened, toggleNavbar }: ShellHeaderProps) {
 
   return (
     <>
-      <AppShell.Header p="xl" bg="#fff">
+      <AppShell.Header p="xl" withBorder={false}>
         <Group wrap="nowrap" h="100%" justify="space-between">
           <Image src="/logo.svg" alt="logo" width={200} height={27} />
 
@@ -62,13 +64,15 @@ export function ShellHeader({ navbarOpened, toggleNavbar }: ShellHeaderProps) {
                     href={item.href}
                     className={cn(
                       "flex items-center gap-1 relative px-4 py-1 text-zinc-500 transition-colors duration-150",
-                      hoverIndex === index ? "text-zinc-700" : "",
+                      hoverIndex === index
+                        ? "text-zinc-700 dark:text-zinc-200"
+                        : "",
                     )}
                     onMouseEnter={() => setHoverIndex(index)}
                   >
                     {hoverIndex === index && (
                       <m.div
-                        className="bg-zinc-100 absolute left-0 right-0 top-0 bottom-0 -z-20 rounded-full"
+                        className="bg-gray-light-hover absolute left-0 right-0 top-0 bottom-0 -z-20 rounded-full"
                         layoutId="nav-hover-background"
                       />
                     )}
@@ -81,12 +85,16 @@ export function ShellHeader({ navbarOpened, toggleNavbar }: ShellHeaderProps) {
             <ConnectButton />
           </Group>
 
-          <Burger
-            opened={navbarOpened}
-            onClick={toggleNavbar}
-            hiddenFrom="lg"
-            size="sm"
-          />
+          <Group>
+            <ColorSchemeSwitch />
+
+            <Burger
+              opened={navbarOpened}
+              onClick={toggleNavbar}
+              hiddenFrom="lg"
+              size="sm"
+            />
+          </Group>
         </Group>
       </AppShell.Header>
     </>
