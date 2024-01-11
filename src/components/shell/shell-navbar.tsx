@@ -19,7 +19,7 @@ export function ShellNavbar({ toggle }: ShellNavbarProps) {
             key={item.name}
             href={item.href}
             className={cn(
-              "w-full flex items-center gap-2 p-4 hover:bg-gray-300 dark:hover:bg-gray-700 rounded-md",
+              "w-full flex items-center gap-2 p-4 hover:bg-gray-light-hover text-zinc-500 hover:text-black dark:hover:text-white rounded-md",
             )}
             onClick={toggle}
           >
