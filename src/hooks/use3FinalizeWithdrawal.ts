@@ -6,7 +6,7 @@ import { useWaitForTransactionReceipt } from "wagmi"
 import { rss3Chain } from "@/lib/wagmi/config/chains"
 import { showNotification } from "@mantine/notifications"
 
-export function useRSS3FinalizeWithdrawal() {
+export function useFinalizeWithdrawal() {
   const {
     writeFinalizeWithdrawalTransaction,
     data,

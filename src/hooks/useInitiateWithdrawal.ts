@@ -6,7 +6,7 @@ import { rss3Chain } from "@/lib/wagmi/config/chains"
 import { rss3Tokens } from "@/lib/wagmi/config/tokens"
 import { showNotification } from "@mantine/notifications"
 
-export function useRSS3InitiateWithdrawal() {
+export function useInitiateWithdrawal() {
   const { writeWithdrawERC20, data, isPending, isSuccess, reset } =
     useWriteWithdrawERC20({
       mutation: {

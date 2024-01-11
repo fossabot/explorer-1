@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react"
+import { type Address } from "viem"
 
 import { rss3Chain } from "@/lib/wagmi/config/chains"
 import { mainnetChainPublicClient } from "@/lib/wagmi/public-client"
 
-export function useRSS3SecondsToProve(blockNumber: bigint) {
+export function useSecondsToFinalizable(withdrawalHash: Address) {
   const [seconds, setSeconds] = useState(0n)
   const [isPending, setIsPending] = useState(true)
 
   useEffect(() => {
-    if (blockNumber) {
+    if (withdrawalHash) {
       let interval: NodeJS.Timeout
       ;(async () => {
-        const time = await mainnetChainPublicClient.getSecondsToNextL2Output({
-          latestL2BlockNumber: blockNumber,
+        const time = await mainnetChainPublicClient.getSecondsToFinalizable({
+          portal: rss3Chain.contracts.portal[rss3Chain.sourceId].address,
           l2OutputOracle:
             rss3Chain.contracts.l2OutputOracle[rss3Chain.sourceId].address,
+          withdrawalHash,
         })
         setSeconds(time)
         setIsPending(false)
@@ -28,7 +30,7 @@ export function useRSS3SecondsToProve(blockNumber: bigint) {
         clearInterval(interval)
       }
     }
-  }, [blockNumber])
+  }, [withdrawalHash])
 
   return {
     data: seconds,
