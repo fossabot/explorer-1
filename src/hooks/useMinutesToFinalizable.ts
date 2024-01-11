@@ -6,10 +6,11 @@ import { mainnetChainPublicClient } from "@/lib/wagmi/public-client"
 
 export function useMinutesToFinalizable(withdrawalHash?: Address) {
   const [minutes, setMinutes] = useState(0n)
-  const [isPending, setIsPending] = useState(true)
+  const [isFetching, setIsFetching] = useState(true)
 
   useEffect(() => {
     if (withdrawalHash) {
+      setIsFetching(true)
       let interval: NodeJS.Timeout
       ;(async () => {
         const time = await mainnetChainPublicClient.getSecondsToFinalizable({
@@ -19,7 +20,7 @@ export function useMinutesToFinalizable(withdrawalHash?: Address) {
           withdrawalHash,
         })
         setMinutes(time / 60n)
-        setIsPending(false)
+        setIsFetching(false)
 
         interval = setInterval(() => {
           setMinutes((prev) => prev - 1n)
@@ -34,6 +35,6 @@ export function useMinutesToFinalizable(withdrawalHash?: Address) {
 
   return {
     data: minutes,
-    isPending,
+    isFetching,
   }
 }

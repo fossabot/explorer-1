@@ -50,6 +50,7 @@ export function BridgeWithdrawModal({
     if (initiateWithdrawal.data) {
       _setInitiationTxHash(initiateWithdrawal.data)
       initiateWithdrawal.reset()
+      setActive(1)
     }
   }, [initiateWithdrawal.isSuccess])
 
@@ -57,6 +58,7 @@ export function BridgeWithdrawModal({
     if (proveWithdrawal.data) {
       _setProofTxHash(proveWithdrawal.data)
       proveWithdrawal.reset()
+      setActive(3)
     }
   }, [proveWithdrawal.isSuccess])
 
@@ -66,11 +68,31 @@ export function BridgeWithdrawModal({
   if (!_initiationTxHash) {
     defaultActive = 0
   } else if (!_proofTxHash) {
-    defaultActive = 2
+    defaultActive = 1
   } else {
-    defaultActive = 4
+    defaultActive = 3
   }
   const [active, setActive] = useState(defaultActive)
+
+  useEffect(() => {
+    if (!minutesToProve.isFetching) {
+      if (minutesToProve.data && minutesToProve.data > 0) {
+        setActive(1)
+      } else {
+        setActive(2)
+      }
+    }
+  }, [minutesToProve.isFetching, minutesToProve.data])
+
+  useEffect(() => {
+    if (!minutesToFinalizable.isFetching) {
+      if (minutesToFinalizable.data && minutesToFinalizable.data > 0) {
+        setActive(3)
+      } else {
+        setActive(4)
+      }
+    }
+  }, [minutesToFinalizable.isFetching, minutesToFinalizable.data])
 
   const actions = [
     {
@@ -81,8 +103,10 @@ export function BridgeWithdrawModal({
     },
     {
       text: `Wait 30 minutes ${
-        minutesToProve.data && active === 1
-          ? `(${minutesToProve.data} minutes left)`
+        active === 1
+          ? `(${
+              minutesToProve.isFetching ? "-" : minutesToProve.data
+            } minutes left)`
           : ""
       }`,
       description:
@@ -96,8 +120,10 @@ export function BridgeWithdrawModal({
     },
     {
       text: `Wait 7 days ${
-        minutesToFinalizable.data && active === 3
-          ? `(${minutesToFinalizable.data} minutes left)`
+        active === 3
+          ? `(${
+              minutesToFinalizable.isFetching ? "-" : minutesToFinalizable.data
+            } minutes left)`
           : ""
       }`,
       description: "Wait for the seven day finalization window",
