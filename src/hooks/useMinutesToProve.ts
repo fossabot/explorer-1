@@ -3,12 +3,13 @@ import { useEffect, useState } from "react"
 import { rss3Chain } from "@/lib/wagmi/config/chains"
 import { mainnetChainPublicClient } from "@/lib/wagmi/public-client"
 
-export function useSecondsToProve(blockNumber: bigint) {
-  const [seconds, setSeconds] = useState(0n)
-  const [isPending, setIsPending] = useState(true)
+export function useMinutesToProve(blockNumber?: bigint) {
+  const [minutes, setMinutes] = useState(0n)
+  const [isFetching, setIsFetching] = useState(true)
 
   useEffect(() => {
     if (blockNumber) {
+      setIsFetching(true)
       let interval: NodeJS.Timeout
       ;(async () => {
         const time = await mainnetChainPublicClient.getSecondsToNextL2Output({
@@ -16,12 +17,12 @@ export function useSecondsToProve(blockNumber: bigint) {
           l2OutputOracle:
             rss3Chain.contracts.l2OutputOracle[rss3Chain.sourceId].address,
         })
-        setSeconds(time)
-        setIsPending(false)
+        setMinutes(time / 60n)
+        setIsFetching(false)
 
         interval = setInterval(() => {
-          setSeconds((prev) => prev - 1n)
-        })
+          setMinutes((prev) => prev - 1n)
+        }, 1000 * 60)
       })()
 
       return () => {
@@ -31,7 +32,7 @@ export function useSecondsToProve(blockNumber: bigint) {
   }, [blockNumber])
 
   return {
-    data: seconds,
-    isPending,
+    data: minutes,
+    isFetching,
   }
 }

@@ -4,8 +4,8 @@ import { type Address } from "viem"
 import { rss3Chain } from "@/lib/wagmi/config/chains"
 import { mainnetChainPublicClient } from "@/lib/wagmi/public-client"
 
-export function useSecondsToFinalizable(withdrawalHash: Address) {
-  const [seconds, setSeconds] = useState(0n)
+export function useMinutesToFinalizable(withdrawalHash?: Address) {
+  const [minutes, setMinutes] = useState(0n)
   const [isPending, setIsPending] = useState(true)
 
   useEffect(() => {
@@ -18,12 +18,12 @@ export function useSecondsToFinalizable(withdrawalHash: Address) {
             rss3Chain.contracts.l2OutputOracle[rss3Chain.sourceId].address,
           withdrawalHash,
         })
-        setSeconds(time)
+        setMinutes(time / 60n)
         setIsPending(false)
 
         interval = setInterval(() => {
-          setSeconds((prev) => prev - 1n)
-        })
+          setMinutes((prev) => prev - 1n)
+        }, 1000 * 60)
       })()
 
       return () => {
@@ -33,7 +33,7 @@ export function useSecondsToFinalizable(withdrawalHash: Address) {
   }, [withdrawalHash])
 
   return {
-    data: seconds,
+    data: minutes,
     isPending,
   }
 }
