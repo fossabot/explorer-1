@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { parseUnits } from "viem"
 
-import { useEstimateDepositGas } from "@/hooks/useEstimateDepositGas"
+import { useEstimateDepositFee } from "@/hooks/useEstimateDepositFee"
 import { useRSS3Deposit } from "@/hooks/useRSS3Deposit"
 import { api } from "@/lib/trpc/client"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
@@ -29,9 +29,9 @@ export function BridgeDepositModal({
     rss3Deposit.write(requestedAmount)
   }
 
-  const estimatedDepositGas = useEstimateDepositGas()
-  const gasWorth = (
-    parseFloat(estimatedDepositGas.data) * (tokenPrice.data?.[gasSymbol] || 0)
+  const estimatedDepositFee = useEstimateDepositFee()
+  const feeWorth = (
+    parseFloat(estimatedDepositFee.data) * (tokenPrice.data?.[gasSymbol] || 0)
   ).toFixed(3)
   const rss3Worth = (amount * (tokenPrice.data?.RSS3 || 0)).toFixed(3)
 
@@ -82,7 +82,7 @@ export function BridgeDepositModal({
             Gas fee to transfer
           </p>
           <p className="font-semibold">
-            {estimatedDepositGas.data} {gasSymbol} (${gasWorth})
+            {estimatedDepositFee.data} {gasSymbol} (${feeWorth})
           </p>
         </div>
         <div>

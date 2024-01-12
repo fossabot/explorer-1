@@ -9,8 +9,8 @@ import { BridgeApproveModal } from "@/components/bridge/approve-modal"
 import BridgeConfirmButton from "@/components/bridge/confirm-button"
 import { BridgeDepositModal } from "@/components/bridge/deposit-modal"
 import { BridgeWithdrawModal } from "@/components/bridge/withdraw-modal"
-import { useEstimateDepositGas } from "@/hooks/useEstimateDepositGas"
-import { useEstimateWithdrawGas } from "@/hooks/useEstimateWithdrawGas"
+import { useEstimateDepositFee } from "@/hooks/useEstimateDepositFee"
+import { useEstimateWithdrawFee } from "@/hooks/useEstimateWithdrawFee"
 import { useRSS3Allowance } from "@/hooks/useRSS3Allowance"
 import { useRSS3Balance } from "@/hooks/useRSS3Balance"
 import { api } from "@/lib/trpc/client"
@@ -70,14 +70,14 @@ export default function BridgePage() {
     form.reset()
   }, [actionType])
 
-  const estimatedDepositGas = useEstimateDepositGas()
-  const estimatedWithdrawGas = useEstimateWithdrawGas()
-  const estimatedGas =
-    actionType === "Deposit" ? estimatedDepositGas : estimatedWithdrawGas
+  const estimatedDepositFee = useEstimateDepositFee()
+  const estimatedWithdrawFee = useEstimateWithdrawFee()
+  const estimatedFee =
+    actionType === "Deposit" ? estimatedDepositFee : estimatedWithdrawFee
 
   const tokenPrice = api.thirdParty.tokenPrice.useQuery()
-  const gasWorth = (
-    parseFloat(estimatedGas.data) * (tokenPrice.data?.[gasSymbol] || 0)
+  const feeWorth = (
+    parseFloat(estimatedFee.data) * (tokenPrice.data?.[gasSymbol] || 0)
   ).toFixed(3)
 
   const requestedAmount = parseUnits(
@@ -186,8 +186,8 @@ export default function BridgePage() {
           <div className="flex justify-between">
             <div>Gas fee to transfer</div>
             <div className="font-semibold">
-              {estimatedGas.isPending ? "-" : estimatedGas.data} {gasSymbol} ($
-              {estimatedGas.isPending || tokenPrice.isPending ? "-" : gasWorth})
+              {estimatedFee.isPending ? "-" : estimatedFee.data} {gasSymbol} ($
+              {estimatedFee.isPending || tokenPrice.isPending ? "-" : feeWorth})
             </div>
           </div>
           <div className="flex justify-between">

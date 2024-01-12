@@ -7,14 +7,14 @@ import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
 import { rss3Tokens } from "@/lib/wagmi/config/tokens"
 import { mainnetChainPublicClient } from "@/lib/wagmi/public-client"
 
-export function useEstimateDepositGas() {
+export function useEstimateDepositFee() {
   const account = useAccount()
   const [estimatedGas, setEstimatedGas] = useState("0")
   const [isPending, setIsPending] = useState(true)
 
   useEffect(() => {
-    if (account.address) {
-      ;(async () => {
+    ;(async () => {
+      if (account.address) {
         const gas = await mainnetChainPublicClient.estimateContractGas({
           address:
             rss3Chain.contracts.l1StandardBridge[rss3Chain.sourceId].address,
@@ -37,8 +37,8 @@ export function useEstimateDepositGas() {
           setEstimatedGas(formatEther(gas * feePerGas.maxFeePerGas))
         }
         setIsPending(false)
-      })()
-    }
+      }
+    })()
   }, [account.address])
 
   return {
