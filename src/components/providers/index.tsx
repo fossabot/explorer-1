@@ -1,4 +1,4 @@
-import { headers } from "next/headers"
+import { cookies, headers } from "next/headers"
 
 import { MotionProvider } from "@/lib/motion/provider"
 import { ThemeProvider } from "@/lib/theme/provider"
@@ -10,7 +10,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
       <MotionProvider>
-        <WagmiProvider>
+        <WagmiProvider cookie={headers().get("cookie")}>
           <TrpcProvider headers={headers()}>
             <RainbowKitProvider>
               <Notifications />
