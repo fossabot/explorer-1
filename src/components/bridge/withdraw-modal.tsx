@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { parseUnits, type Address } from "viem"
+import { useChainId, useSwitchChain } from "wagmi"
 
 import { useFinalizeWithdrawal } from "@/hooks/use3FinalizeWithdrawal"
 import { useInitiateWithdrawal } from "@/hooks/useInitiateWithdrawal"
@@ -33,13 +34,15 @@ export function BridgeWithdrawModal({
   const initiateWithdrawal = useInitiateWithdrawal()
   const proveWithdrawal = useProveWithdrawal()
   const finalizeWithdrawal = useFinalizeWithdrawal()
+  const { switchChain } = useSwitchChain()
+  const chainId = useChainId()
 
   const requestedAmount = parseUnits(amount.toString(), rss3Tokens.decimals)
   const [_initiationTxHash, _setInitiationTxHash] = useState(initiationTxHash)
   const [_proofTxHash, _setProofTxHash] = useState(proofTxHash)
 
   const minutesToProve = useMinutesToProve(_initiationTxHash)
-  const minutesToFinalizable = useMinutesToFinalizable(_proofTxHash)
+  const minutesToFinalizable = useMinutesToFinalizable(_initiationTxHash)
 
   useEffect(() => {
     if (initiateWithdrawal.data) {
@@ -70,24 +73,32 @@ export function BridgeWithdrawModal({
   const [active, setActive] = useState(defaultActive)
 
   useEffect(() => {
-    if (!minutesToProve.isFetching) {
-      if (minutesToProve.data.minutes > 0) {
-        setActive(1)
+    if (active === 1 || active === 2) {
+      if (!minutesToProve.isFetching) {
+        if (minutesToProve.data.minutes > 0) {
+          setActive(1)
+        } else {
+          setActive(2)
+        }
       } else {
-        setActive(2)
+        setActive(1)
       }
     }
-  }, [minutesToProve.isFetching, minutesToProve.data.minutes])
+  }, [minutesToProve.isFetching, minutesToProve.data.minutes, active])
 
   useEffect(() => {
-    if (!minutesToFinalizable.isFetching) {
-      if (minutesToFinalizable.data.minutes > 0) {
-        setActive(3)
+    if (active === 3 || active === 4) {
+      if (!minutesToFinalizable.isFetching) {
+        if (minutesToFinalizable.data.minutes > 0) {
+          setActive(3)
+        } else {
+          setActive(4)
+        }
       } else {
-        setActive(4)
+        setActive(3)
       }
     }
-  }, [minutesToFinalizable.isFetching, minutesToFinalizable.data])
+  }, [minutesToFinalizable.isFetching, minutesToFinalizable.data, active])
 
   const actions = [
     {
@@ -95,6 +106,7 @@ export function BridgeWithdrawModal({
       step: 1,
       description: "Initiate withdrawal request on RSS3 VSL Mainnet",
       hook: initiateWithdrawal,
+      targetChain: rss3Chain,
     },
     {
       text: `Wait ${minutesToProve.data.period / 60} minutes ${
@@ -112,6 +124,7 @@ export function BridgeWithdrawModal({
       step: 2,
       description: "Prove withdrawal on Ethereum Mainnet",
       hook: proveWithdrawal,
+      targetChain: mainnetChain,
     },
     {
       text: `Wait 7 days ${
@@ -128,6 +141,7 @@ export function BridgeWithdrawModal({
       step: 3,
       description: "The funds will be realized on the Ethereum Mainnet",
       hook: finalizeWithdrawal,
+      targetChain: mainnetChain,
     },
   ]
 
@@ -141,6 +155,12 @@ export function BridgeWithdrawModal({
   }
 
   const handleClick = () => {
+    if (actions[active].targetChain!.id !== chainId) {
+      switchChain({
+        chainId: actions[active].targetChain!.id,
+      })
+      return
+    }
     switch (active) {
       case 0:
         initiateWithdrawal.write(requestedAmount)
@@ -238,7 +258,9 @@ export function BridgeWithdrawModal({
           onClick={handleClick}
           disabled={!actions[active].step}
         >
-          {actions[active].text}
+          {actions[active].targetChain?.id !== chainId
+            ? `Switch to ${actions[active].targetChain?.name}`
+            : actions[active].text}
         </Button>
       </div>
     </Modal>
