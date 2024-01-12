@@ -98,7 +98,7 @@ export function BridgeWithdrawModal({
     {
       text: "Initiate withdrawal",
       step: 1,
-      description: "Initiate withdrawal request on RSS3 Chain Mainnet",
+      description: "Initiate withdrawal request on RSS3 VSL Mainnet",
       hook: initiateWithdrawal,
     },
     {

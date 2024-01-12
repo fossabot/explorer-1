@@ -7,7 +7,7 @@ const sourceId = sepolia.id
 
 export const rss3Testnet = /*#__PURE__*/ defineChain({
   id: 2_333,
-  name: "RSS3 Chain Testnet",
+  name: "RSS3 VSL Testnet",
   nativeCurrency: {
     decimals: 18,
     name: "RSS3",
@@ -23,7 +23,7 @@ export const rss3Testnet = /*#__PURE__*/ defineChain({
   },
   blockExplorers: {
     default: {
-      name: "RSS3 Chain Testnet Scan",
+      name: "RSS3 VSL Testnet Scan",
       url: "https://scan.testnet.rss3.dev",
     },
   },
