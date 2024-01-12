@@ -38,17 +38,26 @@ export default function ConnectButton() {
             {(() => {
               if (!connected) {
                 return (
-                  <button onClick={openConnectModal} type="button">
-                    Connect Wallet
-                  </button>
+                  <Button
+                    size="compact-md"
+                    onClick={openConnectModal}
+                    type="button"
+                  >
+                    Connect
+                  </Button>
                 )
               }
 
               if (chain.unsupported) {
                 return (
-                  <button onClick={openChainModal} type="button">
+                  <Button
+                    size="compact-md"
+                    color="red"
+                    onClick={openChainModal}
+                    type="button"
+                  >
                     Wrong network
-                  </button>
+                  </Button>
                 )
               }
 

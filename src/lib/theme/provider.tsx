@@ -13,7 +13,7 @@ theme.fontFamily = font.style.fontFamily
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (
     <MantineProvider theme={theme}>
-      <ColorSchemeScript strategy={""} />
+      <ColorSchemeScript defaultColorScheme="auto" strategy={""} />
       {children}
     </MantineProvider>
   )

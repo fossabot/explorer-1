@@ -10,6 +10,9 @@ export const chains = [mainnetChain, rss3Chain] as const
 
 const { connectors } = getDefaultWallets({
   appName: "RSS3 Explorer",
+  appDescription: "RSS3 Explorer",
+  appIcon: "/logo.svg",
+  appUrl: "https://explorer.rss3.dev/",
   projectId: env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
 })
 
