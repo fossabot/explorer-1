@@ -1,14 +1,14 @@
-import { publicL1OpStackActions, publicL2OpStackActions } from "op-viem"
 import { createPublicClient, http } from "viem"
+import { publicActionsL1, publicActionsL2 } from "viem/op-stack"
 
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
 
 export const rss3ChainPublicClient = createPublicClient({
   chain: rss3Chain,
   transport: http(),
-}).extend(publicL2OpStackActions)
+}).extend(publicActionsL2())
 
 export const mainnetChainPublicClient = createPublicClient({
   chain: mainnetChain,
   transport: http(),
-}).extend(publicL1OpStackActions)
+}).extend(publicActionsL1())

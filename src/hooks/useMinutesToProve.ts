@@ -1,38 +1,55 @@
 import { useEffect, useState } from "react"
+import { Address } from "viem"
 
 import { rss3Chain } from "@/lib/wagmi/config/chains"
-import { mainnetChainPublicClient } from "@/lib/wagmi/public-client"
+import {
+  mainnetChainPublicClient,
+  rss3ChainPublicClient,
+} from "@/lib/wagmi/public-client"
 
-export function useMinutesToProve(blockNumber?: bigint) {
-  const [minutes, setMinutes] = useState(0n)
+export function useMinutesToProve(withdrawalHash?: Address) {
+  const [data, setData] = useState({
+    period: 3600,
+    minutes: 0,
+  })
   const [isFetching, setIsFetching] = useState(true)
 
   useEffect(() => {
-    if (blockNumber) {
+    if (withdrawalHash) {
       setIsFetching(true)
-      let interval: NodeJS.Timeout
+      let timer: NodeJS.Timeout
       ;(async () => {
-        const time = await mainnetChainPublicClient.getSecondsToNextL2Output({
-          latestL2BlockNumber: blockNumber,
-          l2OutputOracle:
-            rss3Chain.contracts.l2OutputOracle[rss3Chain.sourceId].address,
+        const receipt = await rss3ChainPublicClient.getTransactionReceipt({
+          hash: withdrawalHash,
         })
-        setMinutes(time / 60n)
+
+        const { interval, seconds } =
+          await mainnetChainPublicClient.getTimeToProve({
+            targetChain: rss3Chain,
+            receipt,
+          })
+        setData({
+          period: interval,
+          minutes: Math.ceil(seconds / 60),
+        })
         setIsFetching(false)
 
-        interval = setInterval(() => {
-          setMinutes((prev) => prev - 1n)
+        timer = setInterval(() => {
+          setData((prev) => ({
+            ...prev,
+            minutes: prev.minutes - 1,
+          }))
         }, 1000 * 60)
       })()
 
       return () => {
-        clearInterval(interval)
+        clearInterval(timer)
       }
     }
-  }, [blockNumber])
+  }, [withdrawalHash])
 
   return {
-    data: minutes,
+    data,
     isFetching,
   }
 }

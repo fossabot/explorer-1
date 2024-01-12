@@ -19,7 +19,6 @@ export function BridgeWithdrawModal({
   amount,
   onSuccess,
   initiationTxHash,
-  initiationBlockNumber,
   proofTxHash,
 }: {
   opened: boolean
@@ -27,7 +26,6 @@ export function BridgeWithdrawModal({
   amount: number
   onSuccess: () => void
   initiationTxHash?: Address
-  initiationBlockNumber?: bigint
   proofTxHash?: Address
 }) {
   const tokenPrice = api.thirdParty.tokenPrice.useQuery()
@@ -38,12 +36,9 @@ export function BridgeWithdrawModal({
 
   const requestedAmount = parseUnits(amount.toString(), rss3Tokens.decimals)
   const [_initiationTxHash, _setInitiationTxHash] = useState(initiationTxHash)
-  const [_initiationBlockNumber, _setInitiationBlockNumber] = useState(
-    initiationBlockNumber,
-  )
   const [_proofTxHash, _setProofTxHash] = useState(proofTxHash)
 
-  const minutesToProve = useMinutesToProve(_initiationBlockNumber)
+  const minutesToProve = useMinutesToProve(_initiationTxHash)
   const minutesToFinalizable = useMinutesToFinalizable(_proofTxHash)
 
   useEffect(() => {
@@ -76,17 +71,17 @@ export function BridgeWithdrawModal({
 
   useEffect(() => {
     if (!minutesToProve.isFetching) {
-      if (minutesToProve.data && minutesToProve.data > 0) {
+      if (minutesToProve.data.minutes > 0) {
         setActive(1)
       } else {
         setActive(2)
       }
     }
-  }, [minutesToProve.isFetching, minutesToProve.data])
+  }, [minutesToProve.isFetching, minutesToProve.data.minutes])
 
   useEffect(() => {
     if (!minutesToFinalizable.isFetching) {
-      if (minutesToFinalizable.data && minutesToFinalizable.data > 0) {
+      if (minutesToFinalizable.data.minutes > 0) {
         setActive(3)
       } else {
         setActive(4)
@@ -102,10 +97,10 @@ export function BridgeWithdrawModal({
       hook: initiateWithdrawal,
     },
     {
-      text: `Wait 30 minutes ${
+      text: `Wait ${minutesToProve.data.period / 60} minutes ${
         active === 1
           ? `(${
-              minutesToProve.isFetching ? "-" : minutesToProve.data
+              minutesToProve.isFetching ? "-" : minutesToProve.data.minutes
             } minutes left)`
           : ""
       }`,
