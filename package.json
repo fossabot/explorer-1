@@ -18,7 +18,7 @@
     "@mantine/form": "7.4.1",
     "@mantine/hooks": "7.4.1",
     "@mantine/notifications": "7.4.1",
-    "@rainbow-me/rainbowkit": "npm:@songkeys/rainbowkit@2.0.0-alpha.1",
+    "@rainbow-me/rainbowkit": "npm:@songkeys/rainbowkit@2.0.0-beta.0",
     "@rss3/js-sdk": "0.6.56",
     "@rss3/mantine-theme": "0.0.11",
     "@rss3/web3-icons-react": "0.0.1",

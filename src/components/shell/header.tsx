@@ -53,8 +53,13 @@ export function ShellHeader({ navbarOpened, toggleNavbar }: ShellHeaderProps) {
     <>
       <AppShell.Header p="xl" withBorder={false}>
         <Group wrap="nowrap" h="100%" justify="space-between">
-          <Image src="/logo.svg" alt="logo" width={200} height={27} />
-
+          <Image
+            src="/logo.svg"
+            alt="logo"
+            width={200}
+            height={30}
+            style={{ width: 200, height: 30 }}
+          />
           <Group visibleFrom="lg">
             <Group onMouseLeave={() => setHoverIndex(defaultIndex)}>
               <MotionConfig transition={{ duration: 0.15 }}>
@@ -84,7 +89,7 @@ export function ShellHeader({ navbarOpened, toggleNavbar }: ShellHeaderProps) {
             </Group>
           </Group>
 
-          <Group>
+          <Group gap="xs">
             <ColorSchemeSwitch />
             <ConnectButton />
             <Burger

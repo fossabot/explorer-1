@@ -4,7 +4,7 @@ import { WagmiProvider as _WagmiProvider, cookieToInitialState } from "wagmi"
 
 import { RainbowKitProvider as _RainbowKitProvider } from "@rainbow-me/rainbowkit"
 
-import { chains, wagmiConfig } from "../config"
+import { wagmiConfig } from "../config"
 
 import "@rainbow-me/rainbowkit/styles.css"
 
@@ -28,5 +28,5 @@ export function RainbowKitProvider({
 }: {
   children: React.ReactNode
 }) {
-  return <_RainbowKitProvider chains={chains}>{children}</_RainbowKitProvider>
+  return <_RainbowKitProvider>{children}</_RainbowKitProvider>
 }
