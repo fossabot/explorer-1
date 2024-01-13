@@ -2,96 +2,76 @@
 
 import Link from "next/link"
 import React from "react"
-import type { Address } from "viem"
+import { type Address } from "viem"
+import { useEnsName } from "wagmi"
 
 import { Tokens } from "@/app/profiles/[address]/tokens"
+import ProfileAvatar from "@/components/hover-user-card/avatar-image"
 import { useRSS3AccountInfo } from "@/hooks/useRSS3AccountInfo"
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
-import { ActionIcon, Card, CopyButton, Title, Tooltip } from "@mantine/core"
+import {
+  ActionIcon,
+  Button,
+  Card,
+  CopyButton,
+  Title,
+  Tooltip,
+} from "@mantine/core"
 
 export type ProfilesPageProps = { params: { address: Address } }
 
 export default function ProfilesPage({ params }: ProfilesPageProps) {
   const address = params.address
   const accountInfo = useRSS3AccountInfo(address)
+  const ensName = useEnsName({ address })
 
   return (
     <div className="space-y-8 mt-4">
+      <Title size="h1">
+        {accountInfo.data?.isContract ? "Contract" : "Address"} details
+      </Title>
+
       <Card radius="md" withBorder className="space-y-4">
-        <Title size="h1">
-          {accountInfo.data?.isContract ? "Contract" : "Address"} details
-        </Title>
+        <div className="flex items-center gap-2">
+          <ProfileAvatar address={address} />
 
-        <div className="font-mono text-lg flex items-center gap-2">
-          <span className="flex-shrink truncate">{address}</span>
-          <CopyButton value={address} timeout={2000}>
-            {({ copied, copy }) => (
-              <Tooltip
-                label={copied ? "Copied" : "Copy Address"}
-                withArrow
-                position="right"
-              >
-                <ActionIcon
-                  color={copied ? "teal" : "gray"}
-                  variant="subtle"
-                  onClick={copy}
-                >
-                  {copied ? (
-                    <i className="i-mingcute-check-line" />
-                  ) : (
-                    <i className="i-mingcute-copy-line" />
-                  )}
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </CopyButton>
-        </div>
+          <div>
+            <div>{ensName.data}</div>
+            <div className="font-mono text-lg flex items-center gap-2">
+              <span className="flex-shrink truncate">{address}</span>
+              <CopyButton value={address} timeout={2000}>
+                {({ copied, copy }) => (
+                  <Tooltip
+                    label={copied ? "Copied" : "Copy Address"}
+                    withArrow
+                    position="top-end"
+                  >
+                    <ActionIcon
+                      color={copied ? "teal" : "gray"}
+                      variant="subtle"
+                      onClick={copy}
+                    >
+                      {copied ? (
+                        <i className="i-mingcute-check-line" />
+                      ) : (
+                        <i className="i-mingcute-copy-line" />
+                      )}
+                    </ActionIcon>
+                  </Tooltip>
+                )}
+              </CopyButton>
 
-        <div className="space-y-2">
-          {renderAccountInfo(
-            "Balance",
-            "Address balance in RSS3. Doesn't include ERC20, ERC721 and ERC1155 tokens.",
-            accountInfo.data,
-            ({ coinBalance, coinSymbol }) =>
-              `${coinBalance.toLocaleString()} ${coinSymbol}`,
-          )}
-
-          {renderAccountInfo(
-            "Transactions",
-            "Number of transactions related to this address",
-            accountInfo.data,
-            ({ transactionsCount, transactionsLink }) => (
               <Link
-                href={transactionsLink}
+                href={`https://hoot.it/${address}`}
+                passHref
                 target="_blank"
-                className="text-primary-500 hover:underline"
               >
-                {transactionsCount.toLocaleString()}
+                <Button size="compact-xs" variant="light">
+                  View More
+                </Button>
               </Link>
-            ),
-          )}
-
-          {renderAccountInfo(
-            "Gas used",
-            "Gas used by the address",
-            accountInfo.data,
-            ({ gasUsageCount }) => gasUsageCount.toLocaleString(),
-          )}
-
-          {renderAccountInfo(
-            "Last balance update",
-            "Block number in which the address was updated",
-            accountInfo.data,
-            ({ lastBalanceUpdateBlock, lastBalanceUpdateBlockLink }) => (
-              <Link
-                href={lastBalanceUpdateBlockLink}
-                target="_blank"
-                className="text-primary-500 hover:underline"
-              >
-                {`${lastBalanceUpdateBlock}`}
-              </Link>
-            ),
-          )}
+            </div>
+          </div>
         </div>
       </Card>
 
