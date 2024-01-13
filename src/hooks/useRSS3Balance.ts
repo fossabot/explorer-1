@@ -1,14 +1,15 @@
-import { erc20Abi, formatUnits } from "viem"
+import { Address, erc20Abi, formatUnits } from "viem"
 import { useAccount, useBalance, useReadContracts } from "wagmi"
 
 import { mainnetChain, rss3Chain } from "@/lib/wagmi/config/chains"
 import { rss3Tokens } from "@/lib/wagmi/config/tokens"
 
-export const useRSS3Balance = (chainId: number) => {
+export const useRSS3Balance = (chainId: number, address_?: Address) => {
   const account = useAccount()
+  const address = address_ ?? account.address
 
   const rss3ChainBalance = useBalance({
-    address: account.address,
+    address,
     chainId: rss3Chain.id,
   })
 
@@ -19,7 +20,7 @@ export const useRSS3Balance = (chainId: number) => {
         address: rss3Tokens[mainnetChain.id].address,
         abi: erc20Abi,
         functionName: "balanceOf",
-        args: [account.address || "0x"],
+        args: [address || "0x"],
         chainId: mainnetChain.id,
       },
       {
@@ -31,7 +32,7 @@ export const useRSS3Balance = (chainId: number) => {
     ],
   })
 
-  if (!account.address) {
+  if (!address) {
     return {
       formatted: "0",
       isPending: true,
