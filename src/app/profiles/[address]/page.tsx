@@ -81,14 +81,12 @@ export default function ProfilesPage({ params }: ProfilesPageProps) {
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Tokens
             chain={mainnetChain}
-            address={address}
             title="On Ethereum"
             className="col-span-1"
           />
 
           <Tokens
             chain={rss3Chain}
-            address={address}
             title="On RSS3 Chain"
             className="col-span-1"
           />
